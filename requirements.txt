@@ -1,0 +1,7 @@
+behave==1.2.6
+numpy==1.18.1
+parse==1.14.0
+parse-type==0.5.2
+# Editable Git install with no remote (ray-tracer==1.0.0)
+-e /bb/mbig_new2/mbig2946/rhoban/ray_tracer
+six==1.14.0
