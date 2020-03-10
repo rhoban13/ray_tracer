@@ -26,20 +26,24 @@ class _RP3Point:
     def w(self):
         return self.ndarray[3]
 
-    def __eq__(self, other):
-        if self.w == 0:
-            return np.array_equal(self.ndarray[:-1], other.ndarray[:-1])
-        else:
-            self.to_affine()
-            other.to_affine()
-            return np.array_equal(self.ndarray, other.ndarray)
-
     def __add__(self, other):
         return RP3Point(*(self.ndarray + other.ndarray))
 
     def __sub__(self, other):
         return RP3Point(*(self.ndarray - other.ndarray))
-    
+
+    def __neg__(self):
+        """
+        Not sure this one is a good idea to implmement
+        """
+        return RP3Point(*(-self.ndarray))
+
+    def __mul__(self, scalar):
+        return RP3Point(*(scalar * self.ndarray))
+
+    def __truediv__(self, scalar):
+        return RP3Point(*(self.ndarray / scalar))
+
     def to_affine(self):
         self.ndarray = self.ndarray / self.w
 
@@ -51,13 +55,20 @@ class Point(_RP3Point):
     def __init__(self, x, y, z):
         super().__init__(x, y, z, 1)
 
+    def __eq__(self, other):
+        assert isinstance(other, Point)
+        self.to_affine()
+        other.to_affine()
+        return np.array_equal(self.ndarray, other.ndarray)
+        
     def __add__(self, other):
         assert isinstance(other, Vector)
         return super().__add__(other)
 
     def __sub__(self, other):
-        assert isinstance(other, Point)
+        assert isinstance(other, Point) or isinstance(other, Vector)
         return super().__sub__(other)
+        
     
 class Vector(_RP3Point):
     """
@@ -67,9 +78,33 @@ class Vector(_RP3Point):
     def __init__(self, x, y, z):
         super().__init__(x, y, z, 0)
 
+    def __eq__(self, other):
+        assert isinstance(other, Vector)
+        return np.array_equal(self.ndarray[:-1], other.ndarray[:-1])
 
 def RP3Point(x, y, z, w):
     if w == 0:
         return Vector(x, y, z)
     else:
         return Point(x, y, z)
+
+def magnitude(v):
+    assert isinstance(v, Vector)
+    return np.linalg.norm(v.ndarray[:-1])
+
+def normalize(v):
+    assert isinstance(v, Vector)
+    mag = magnitude(v)
+    if mag == 0:
+        return v
+    return v / magnitude(v)
+
+def dot(v, w):
+    assert isinstance(v, Vector)
+    assert isinstance(w, Vector)
+    return np.dot(v.ndarray, w.ndarray)
+
+def cross(v, w):
+    assert isinstance(v, Vector)
+    assert isinstance(w, Vector)
+    return Vector(*np.cross(v.ndarray[:-1], w.ndarray[:-1]))
