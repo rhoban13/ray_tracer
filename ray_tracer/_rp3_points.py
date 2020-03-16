@@ -68,7 +68,9 @@ class Point(_RP3Point):
     def __sub__(self, other):
         assert isinstance(other, Point) or isinstance(other, Vector)
         return super().__sub__(other)
-        
+
+    def __str__(self):
+        return f"Point({self.x}, {self.y}, {self.z})"
     
 class Vector(_RP3Point):
     """
@@ -82,6 +84,9 @@ class Vector(_RP3Point):
         assert isinstance(other, Vector)
         return np.array_equal(self.ndarray[:-1], other.ndarray[:-1])
 
+    def __str__(self):
+        return f"Vector({self.x}, {self.y}, {self.z})"
+    
 def RP3Point(x, y, z, w):
     if w == 0:
         return Vector(x, y, z)

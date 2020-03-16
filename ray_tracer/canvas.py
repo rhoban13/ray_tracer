@@ -26,7 +26,6 @@ def pixel_at(canvas, x, y):
 
 def write_pixel(canvas, x, y, color):
     canvas.write_pixel(x, y, color)
-#{"bbid":"MG!!02AY73"}
 
 def canvas_to_ppm(canvas):
     cv2.imwrite("foo.ppm", canvas._image)
