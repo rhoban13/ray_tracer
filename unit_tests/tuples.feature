@@ -3,20 +3,20 @@ Feature: Tuples, Vectors, and Points
 Scenario: A Point has nonzero w coordinate
   Book: A tuple with w=1.0 is a point
   Given a = RP3Point(4.3, -4.2, 3.1, 1.0)
-   Then a.x = 4.3
-    And a.y = -4.2
-    And a.z = 3.1
-    And a.w = 1.0
+   Then a.x == 4.3
+    And a.y == -4.2
+    And a.z == 3.1
+    And a.w == 1.0
     And a is a point
     And a is not a vector
 
 Scenario: A Vector has a w coordinate == 0 
   Book: A tuple with w=0 is a vector
   Given a = RP3Point(4.3, -4.2, 3.1, 0.0)
-  Then a.x = 4.3
-    And a.y = -4.2
-    And a.z = 3.1
-    And a.w = 0.0
+  Then a.x == 4.3
+    And a.y == -4.2
+    And a.z == 3.1
+    And a.w == 0.0
     And a is not a point
     And a is a vector
 
@@ -106,9 +106,9 @@ Scenario: The cross product of two vectors
 
 Scenario: Colors are (red, green, blue) tuples
   Given c = Color(-0.5, 0.4, 1.7)
-  Then c.red = -0.5
-    And c.green = 0.4
-    And c.blue = 1.7
+  Then c.red == -0.5
+    And c.green == 0.4
+    And c.blue == 1.7
 
 Scenario: Adding colors
   Given c1 = Color(0.9, 0.6, 0.75)
