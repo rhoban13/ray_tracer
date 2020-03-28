@@ -1,6 +1,8 @@
 import ast
 import math
 
+import numpy as np
+
 from ray_tracer import *
 from ray_tracer.canvas import pixel_at
 
@@ -26,4 +28,17 @@ def step_impl(context, lhs, rhs):
         _locals[name] = getattr(context, name)
     _lhs = eval(lhs, globals(), _locals)
     _rhs = eval(rhs, globals(), _locals)
-    assert _lhs == _rhs, f"{_lhs} != {_rhs}"
+
+    if isinstance(_lhs, np.ndarray) and isinstance(_rhs, np.ndarray):
+        assert np.array_equal(_lhs, _rhs)
+    else:
+        assert _lhs == _rhs, f"{_lhs} != {_rhs}"
+
+@then(u'{lhs} != {rhs}')
+def step_impl(context, lhs, rhs):
+    try:
+        context.execute_steps(f"then {lhs} == {rhs}")
+    except AssertionError:
+        pass
+    else:
+        assert False, f"{lhs} == {rhs}"

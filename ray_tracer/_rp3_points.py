@@ -91,7 +91,7 @@ def RP3Point(x, y, z, w):
     if w == 0:
         return Vector(x, y, z)
     else:
-        return Point(x, y, z)
+        return Point(x/w, y/w, z/w)
 
 def magnitude(v):
     assert isinstance(v, Vector)

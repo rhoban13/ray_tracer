@@ -10,8 +10,7 @@ Scenario: A Point has nonzero w coordinate
     And a is a point
     And a is not a vector
 
-Scenario: A Vector has a w coordinate == 0 
-  Book: A tuple with w=0 is a vector
+Scenario: A tuple with w=0 is a vector
   Given a = RP3Point(4.3, -4.2, 3.1, 0.0)
   Then a.x == 4.3
     And a.y == -4.2
