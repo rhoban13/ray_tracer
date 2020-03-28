@@ -33,8 +33,8 @@ e = Environment(gravity, wind)
 c = Canvas(900, 550)
 
 while p.position.y > 0:
-    x, y  = int(p.position.x), int(p.position.y)
-    c.write_pixel(x, 449 - y, Color(0,0,1))
+    x, y  = int(p.position.x), 549 - int(p.position.y)
+    c.write_pixel(x, y, Color(0,0,1))
     p = tick(e, p)
 
 print(f"p has landed at {p}")
