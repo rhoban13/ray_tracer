@@ -1,7 +1,8 @@
 from dataclasses import dataclass
+from pathlib import Path
 
 from ray_tracer import Point, normalize, Vector, Color
-from ray_tracer.canvas import Canvas, canvas_to_ppm
+from ray_tracer.canvas import Canvas, canvas_to_ppm, canvas_to_png
 
 @dataclass
 class Projectile:
@@ -32,13 +33,12 @@ e = Environment(gravity, wind)
 c = Canvas(900, 550)
 
 while p.position.y > 0:
-    p = tick(e, p)
     x, y  = int(p.position.x), int(p.position.y)
-    print(f"writing {x}, {y}")
-    c.write_pixel(x, y, Color(100,0,0))
+    c.write_pixel(x, 449 - y, Color(0,0,1))
+    p = tick(e, p)
 
-print(c._image)
 print(f"p has landed at {p}")
-canvas_to_ppm(c)
+path = Path(__file__).parent / "chap1.png"
+canvas_to_png(str(path), c)
 
     

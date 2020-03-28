@@ -70,7 +70,7 @@ class Point(_RP3Point):
         return super().__sub__(other)
 
     def __str__(self):
-        return f"Point({self.x}, {self.y}, {self.z})"
+        return f"Point({round(self.x, 2)}, {round(self.y, 2)}, {round(self.z, 2)})"
     
 class Vector(_RP3Point):
     """
@@ -85,7 +85,7 @@ class Vector(_RP3Point):
         return np.array_equal(self.ndarray[:-1], other.ndarray[:-1])
 
     def __str__(self):
-        return f"Vector({self.x}, {self.y}, {self.z})"
+        return f"Vector({round(self.x, 2)}, {round(self.y, 2)}, {round(self.z, 2)})"
     
 def RP3Point(x, y, z, w):
     if w == 0:

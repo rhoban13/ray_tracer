@@ -33,3 +33,5 @@ def canvas_to_ppm(canvas):
     image = cv2.imread("foo.ppm")
     return image
 
+def canvas_to_png(filepath, canvas):
+    cv2.imwrite(filepath, canvas._image)
