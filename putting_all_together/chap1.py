@@ -38,7 +38,7 @@ while p.position.y > 0:
     p = tick(e, p)
 
 print(f"p has landed at {p}")
-path = Path(__file__).parent / "chap1.png"
+path = Path(__file__).parent / "chap2.png"
 canvas_to_png(str(path), c)
 
     
