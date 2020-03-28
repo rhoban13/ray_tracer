@@ -19,8 +19,9 @@ class Canvas:
         return Color(*(self._image[y][x]))
     
     def write_pixel(self, x, y, color):
-        self._image[y][x] = (color.red, color.green, color.blue)
-    
+        pixel = color.to_pixel()
+        self._image[y][x] = pixel
+
 def pixel_at(canvas, x, y):
     return canvas.pixel_at(x, y)
 
@@ -29,5 +30,6 @@ def write_pixel(canvas, x, y, color):
 
 def canvas_to_ppm(canvas):
     cv2.imwrite("foo.ppm", canvas._image)
-    with open("foo.ppm") as f:
-        return f.read().split("\n")
+    image = cv2.imread("foo.ppm")
+    return image
+

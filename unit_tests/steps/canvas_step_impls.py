@@ -1,3 +1,5 @@
+import numpy as np
+
 from ray_tracer.canvas import Canvas, pixel_at, write_pixel, canvas_to_ppm
 from ray_tracer import Color
 
@@ -30,14 +32,12 @@ def step_impl(context, ppm, canvas):
     _ppm = canvas_to_ppm(_canvas)
     setattr(context, ppm, _ppm)
 
-@then(u'lines {start:d}-{end:d} of {ppm} are')
-def step_impl(context, start, end, ppm):
-    _ppm = getattr(context, ppm)[start-1:end]
-    body_lines = context.text.split("\n")
-    print(_ppm)
-    print(body_lines)
-    assert len(_ppm) == len(body_lines)
-
-    for i in range(len(_ppm)):
-        assert _ppm[i] == body_lines[i], f"{_ppm[i]} != {body_lines[i]}"
+@then(u'the body of {ppm} is')
+def step_impl(context, ppm):
+    _ppm = getattr(context, ppm)
+    expected_lines = context.text.split("\n")
+    lines = tuple(int(x) for line in expected_lines for x in line.split(" "))
+    lines = np.reshape(lines, _ppm.shape)
+    
+    assert np.array_equal(lines, _ppm)
 

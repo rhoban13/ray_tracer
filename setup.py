@@ -7,5 +7,9 @@ setup(
     author_email='rhoban@bloomberg.net',
     description='Ray Tracer',
     url='https://bbgithub.dev.bloomberg.com/rhoban/ray_tracer',
-    packages=['ray_tracer']
+    packages=['ray_tracer'],
+    install_requires=[
+        "numpy",
+        "opencv-python"
+    ]
 )

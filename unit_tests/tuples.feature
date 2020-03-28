@@ -128,3 +128,10 @@ Scenario: Multiplying colors
   Given c1 = Color(1, 0.2, 0.4)
     And c2 = Color(0.9, 1, 0.1)
    Then c1 * c2 == Color(0.9, 0.2, 0.04)
+
+
+
+Scenario: Convert color to pixel
+  Added by me, ensure to_pixel scales & truncates
+  Given c = Color(1.5, 0.5, -2)
+   Then c.to_pixel() == (255, 128 ,0)
