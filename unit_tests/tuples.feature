@@ -2,7 +2,7 @@ Feature: Tuples, Vectors, and Points
 
 Scenario: A Point has nonzero w coordinate
   Book: A tuple with w=1.0 is a point
-  Given a = RP3Point(4.3, -4.2, 3.1, 1.0)
+  Given a = R4Vector(4.3, -4.2, 3.1, 1.0)
    Then a.x == 4.3
     And a.y == -4.2
     And a.z == 3.1
@@ -11,7 +11,7 @@ Scenario: A Point has nonzero w coordinate
     And a is not a vector
 
 Scenario: A tuple with w=0 is a vector
-  Given a = RP3Point(4.3, -4.2, 3.1, 0.0)
+  Given a = R4Vector(4.3, -4.2, 3.1, 0.0)
   Then a.x == 4.3
     And a.y == -4.2
     And a.z == 3.1
@@ -21,19 +21,18 @@ Scenario: A tuple with w=0 is a vector
 
 Scenario: Point() creates tuples with w=1
   Given p = Point(4, -4, 3)
-    And q = RP3Point(4, -4, 3, 1)
+    And q = R4Vector(4, -4, 3, 1)
    Then p == q
 
 Scenario: Vector() creates tuples with w=0
   Given v = Vector(4, -4, 3)
-    And w = RP3Point(4, -4, 3, 0)
+    And w = R4Vector(4, -4, 3, 0)
    Then v == w
 
-Scenario: Adding two RP3Points
-  Book: Adding two tuples
-  Given a1 = RP3Point(3, -2, 5, 1)
-    And a2 = RP3Point(-2, 3, 1, 0)
-   Then a1 + a2 == RP3Point(1, 1, 6, 1)
+Scenario: Adding two tuples
+  Given a1 = R4Vector(3, -2, 5, 1)
+    And a2 = R4Vector(-2, 3, 1, 0)
+   Then a1 + a2 == R4Vector(1, 1, 6, 1)
 
 Scenario: Subtracting two points
   Given p1 = Point(3, 2, 1)
@@ -56,20 +55,20 @@ Scenario: Subtracting a vector from the zero vector
    Then zero - v == Vector(-1, 2, -3)
 
 Scenario: Negating a tuple
-  Given a = RP3Point(1, -2, 3, -4)
-  Then -a == RP3Point(-1, 2, -3, 4)
+  Given a = R4Vector(1, -2, 3, -4)
+  Then -a == R4Vector(-1, 2, -3, 4)
 
 Scenario: Multiplying a tuple by a scalar
-  Given a = RP3Point(1, -2, 3, -4)
-  Then a * 3.5 == RP3Point(3.5, -7, 10.5, -14)
+  Given a = R4Vector(1, -2, 3, -4)
+  Then a * 3.5 == R4Vector(3.5, -7, 10.5, -14)
 
 Scenario: Multiplying a tuple by a fraction
-  Given a = RP3Point(1, -2, 3, -4)
-  Then a * 0.5 == RP3Point(0.5, -1, 1.5, -2)
+  Given a = R4Vector(1, -2, 3, -4)
+  Then a * 0.5 == R4Vector(0.5, -1, 1.5, -2)
 
 Scenario: Dividing a tuple by a scalar
-  Given a = RP3Point(1, -2, 3, -4)
-  Then a / 2 == RP3Point(0.5, -1, 1.5, -2)
+  Given a = R4Vector(1, -2, 3, -4)
+  Then a / 2 == R4Vector(0.5, -1, 1.5, -2)
 
 Scenario: Computing the magnitude of vector(1, 0, 0)
   Given v = Vector(1, 0, 0)

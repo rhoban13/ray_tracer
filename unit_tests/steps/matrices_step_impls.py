@@ -1,7 +1,11 @@
 import numpy as np
 
+from behave import register_type
+from parse_type import TypeBuilder
+
 def table_to_matrix(table):
-    matrix = np.array([tuple(float(x) for x in table.headings)])
+    foo = [tuple(float(x) for x in table.headings)]
+    matrix = np.array(foo)
     for row in table:
         matrix = np.append(matrix, [tuple(float(cell) for cell in row)], axis=0)
     return matrix
@@ -16,9 +20,33 @@ def step_impl(context, n, m, name):
     assert matrix.shape == (n, m), f"{matrix.shape} != {(n,m)}"
     setattr(context, name, matrix)
 
-@then(u'{A} * {B} is the following 4x4 matrix')
-def step_impl(context, A, B):
+@then(u'{expr} is the following {n:d}x{m:d} matrix')
+def step_impl(context, expr, n, m):
+    expected = table_to_matrix(context.table)
+    setattr(context, "expected", expected)
+    context.execute_steps(f"then {expr} == expected")
+    assert expected.shape == (n, m)
+
+@then(u'{expr} is the following matrix')
+def step_impl(context, expr):
+    expected = table_to_matrix(context.table)
+    setattr(context, "expected", expected)
+    context.execute_steps(f"then {expr} == expected")
+
+parse_is_or_is_not = TypeBuilder.make_enum({"is": True, "is not": False})
+register_type(IsOrIsNot=parse_is_or_is_not)
+
+@then(u'{name} {x:IsOrIsNot} invertible')
+def step_impl(context, name, x):
+    _name = getattr(context, name)
+    if x:
+        assert np.linalg.det(_name) != 0
+    else:
+        assert np.linalg.det(_name) == 0
+
+@given(u'{C} = np.dot({A}, {B})')
+def step_impl(context, C, A, B):
     _A = getattr(context, A)
     _B = getattr(context, B)
-    expected = table_to_matrix(context.table)
-    assert np.array_equal(_A.dot(_B), expected)
+    _C = np.dot(_A, _B)
+    setattr(context, C, _C)

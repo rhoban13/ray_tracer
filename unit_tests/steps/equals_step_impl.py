@@ -6,6 +6,7 @@ import numpy as np
 from ray_tracer import *
 from ray_tracer.canvas import pixel_at
 
+
 def _get_names_needed(*expressions):
     output = set()
     for expr in expressions:
@@ -26,13 +27,14 @@ def step_impl(context, lhs, rhs):
             continue
         assert name in context, f"{name} is not in context"
         _locals[name] = getattr(context, name)
+
     _lhs = eval(lhs, globals(), _locals)
     _rhs = eval(rhs, globals(), _locals)
-
     if isinstance(_lhs, np.ndarray) and isinstance(_rhs, np.ndarray):
-        assert np.array_equal(_lhs, _rhs)
+        assert np.allclose(_lhs, _rhs, atol=1e-05), f"{_lhs} != {_rhs}"
     else:
         assert _lhs == _rhs, f"{_lhs} != {_rhs}"
+
 
 @then(u'{lhs} != {rhs}')
 def step_impl(context, lhs, rhs):

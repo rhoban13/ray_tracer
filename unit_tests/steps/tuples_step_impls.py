@@ -1,9 +1,9 @@
 
-from ray_tracer import * # ugh
+from ray_tracer import R4Vector, Point, Vector, Color, normalize
 
-@given(u'{name} = RP3Point({x:g}, {y:g}, {z:g}, {w:g})')
+@given(u'{name} = R4Vector({x:g}, {y:g}, {z:g}, {w:g})')
 def step_impl(context, name, x, y, z, w):
-    setattr(context, name,  RP3Point(x, y, z, w))
+    setattr(context, name,  R4Vector(x, y, z, w))
 
 @given(u'{name} = Point({x:g}, {y:g}, {z:g})')
 def step_impl(context, name, x, y, z):
