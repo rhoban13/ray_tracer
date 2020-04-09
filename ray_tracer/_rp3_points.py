@@ -3,10 +3,6 @@ import numpy as np
 
 from typing import Any
 
-#class _RP3Point:
-#    def to_affine(self):
-#        self.ndarray = self.ndarray / self.w
-
 class _R4Vector:
     def __init__(self, x: Number, y: Number, z: Number, w: Number):
         for coord in (x, y, z, w):
@@ -47,14 +43,7 @@ class _R4Vector:
         return R4Vector(*(self.ndarray / scalar))
     
     def __array_ufunc__(self, ufunc, method, *inputs, **kwargs):
-        print("__array_ufunc__")
-        print(self)
-        print(ufunc)
-        print(type(ufunc))
-        print(dir(np.ufunc))
-        print(method)
-        print(inputs)
-        print(kwargs)
+        print("calling __array_ufunc__")
         if method != "__call__":
             return NotImplemented
 
@@ -70,6 +59,7 @@ class _R4Vector:
         
 
     def __array_function__(self, func, types, args, kwargs):
+        print("calling __array_function__")
         if func not in HANDLED_FUNCTIONS:
             return NotImplemented
         # https://docs.scipy.org/doc/numpy/user/basics.dispatch.html
@@ -92,19 +82,17 @@ def dot(A, b):
 
 class Point(_R4Vector):
     """
-    This represents a point in the affine pacth of RP^3
-    This is identified with a eucliden point in R^3
+    This represents a point in the affine patch of RP^3, 
+    identified with a eucliden point in R^3
     """
     def __init__(self, x, y ,z, w=1):
         assert w != 0
         super().__init__(x, y, z, w)
 
     def __eq__(self, other):
-        print("Point.__eq__")
         assert isinstance(other, Point), f"rhs has type {type(other)}"
-        #self.to_affine()
-        #other.to_affine()
-        return np.array_equal(self.ndarray, other.ndarray)
+        return np.allclose(self.ndarray, other.ndarray)
+        #return np.array_equal(self.ndarray, other.ndarray)
         
     def __add__(self, other):
         assert isinstance(other, Vector)
