@@ -6,7 +6,7 @@ from ray_tracer.transformations import rotation_z
 from ray_tracer.canvas import Canvas, canvas_to_ppm, canvas_to_png
 
 
-c = Canvas(50, 50)
+c = Canvas(200, 200)
 adjustment = Vector(c.width/2, c.height/2 ,0)
 radius = 3 * c.width / 8
 center = Point(0, 0, 0) + adjustment
