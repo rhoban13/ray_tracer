@@ -55,3 +55,7 @@ class Color:
                 return 0
             return round(255 * x)
         return tuple( truncate(x) for x in self.ndarray)
+
+RED = Color(1, 0, 0)
+GREEN = Color(0, 1, 0)
+BLUE = Color(0, 0, 1)

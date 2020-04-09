@@ -43,7 +43,6 @@ class _R4Vector:
         return R4Vector(*(self.ndarray / scalar))
     
     def __array_ufunc__(self, ufunc, method, *inputs, **kwargs):
-        print("calling __array_ufunc__")
         if method != "__call__":
             return NotImplemented
 
@@ -59,7 +58,6 @@ class _R4Vector:
         
 
     def __array_function__(self, func, types, args, kwargs):
-        print("calling __array_function__")
         if func not in HANDLED_FUNCTIONS:
             return NotImplemented
         # https://docs.scipy.org/doc/numpy/user/basics.dispatch.html
