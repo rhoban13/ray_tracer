@@ -9,6 +9,9 @@ class Transformation:
     def __init__(self, arr):
         self.ndarray = np.array(arr)
 
+    def inverse(self):
+        return Transformation(np.linalg.inv(self.ndarray))
+
     def __mul__(self, other):
         if isinstance(other, Transformation):
             return Transformation(np.dot(self.ndarray, other.ndarray))
