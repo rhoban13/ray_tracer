@@ -5,3 +5,5 @@
 ![](putting_all_together/chap2.png)
 
 ![](putting_all_together/chap4.png)
+
+![](putting_all_together/chap5.png)
