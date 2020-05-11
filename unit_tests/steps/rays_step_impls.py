@@ -1,5 +1,5 @@
-from ray_tracer import Ray, Point, Vector, position
-from ray_tracer._rays import transform as ray_transform
+from ray_tracer import Ray, Point, Vector
+from ray_tracer._rays import transform as ray_transform, position
 
 @when(u'{r} = Ray({origin}, {direction})')
 def step_impl(context, r, origin, direction):

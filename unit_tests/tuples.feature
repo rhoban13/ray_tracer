@@ -127,9 +127,19 @@ Scenario: Multiplying colors
     And c2 = Color(0.9, 1, 0.1)
    Then c1 * c2 == Color(0.9, 0.2, 0.04)
 
-
-
 Scenario: Convert color to pixel
   Added by me, ensure to_pixel scales & truncates
   Given c = Color(1.5, 0.5, -2)
    Then c.to_pixel() == (255, 128 ,0)
+
+Scenario: Reflecting a vector approaching at 45Â°
+  Given v = Vector(1, -1, 0)
+    And n = Vector(0, 1, 0)
+  When r = reflect(v, n)
+  Then r == Vector(1, 1, 0)
+
+Scenario: Reflecting a vector off a slanted surface
+  Given v = Vector(0, -1, 0)
+    And n = Vector(√2/2, √2/2, 0)
+  When r = reflect(v, n)
+  Then r == Vector(1, 0, 0)

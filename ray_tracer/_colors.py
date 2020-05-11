@@ -6,11 +6,11 @@ import numpy as np
 
 class Color:
     def __init__(self, red, green, blue):
-        self.ndarray = np.array((blue, green, red))
+        self.ndarray = np.array((red, green, blue))
     
     @property
     def red(self):
-        return self.ndarray[2]
+        return self.ndarray[0]
     
     @property
     def green(self):
@@ -18,7 +18,7 @@ class Color:
     
     @property
     def blue(self):
-        return self.ndarray[0]
+        return self.ndarray[2]
 
     def __eq__(self, other):
         assert isinstance(other, Color), f"Can't compare {type(other)}"
@@ -59,3 +59,4 @@ class Color:
 RED = Color(1, 0, 0)
 GREEN = Color(0, 1, 0)
 BLUE = Color(0, 0, 1)
+BLACK = Color(0, 0, 0)

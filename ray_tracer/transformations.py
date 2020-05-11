@@ -12,6 +12,9 @@ class Transformation:
     def inverse(self):
         return Transformation(np.linalg.inv(self.ndarray))
 
+    def transpose(self):
+        return Transformation(np.transpose(self.ndarray))
+
     def __mul__(self, other):
         if isinstance(other, Transformation):
             return Transformation(np.dot(self.ndarray, other.ndarray))
@@ -36,6 +39,7 @@ class Translation(Transformation):
             -self.ndarray[1,3],
             -self.ndarray[2,3]
         )
+
 
 class Scaling(Transformation):
     def __init__(self, x, y, z):
@@ -119,3 +123,6 @@ class Shearing(Transformation):
 
 def inverse(transformation):
     return transformation.inverse()
+
+def transpose(transformation):
+    return transformation.transpose()

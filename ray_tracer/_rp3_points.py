@@ -114,10 +114,11 @@ class Vector(_R4Vector):
 
     def __eq__(self, other):
         assert isinstance(other, Vector)
-        return np.array_equal(self.ndarray, other.ndarray)
+        return np.allclose(self.ndarray, other.ndarray, atol=1e-5)
+        #return np.array_equal(self.ndarray, other.ndarray)
 
     def __str__(self):
-        return f"Vector({round(self.x, 2)}, {round(self.y, 2)}, {round(self.z, 2)})"
+        return f"Vector({round(self.x, 5)}, {round(self.y, 5)}, {round(self.z, 5)})"
 
 
 def R4Vector(x, y, z, w):
@@ -150,3 +151,7 @@ def cross(v, w):
     assert isinstance(v, Vector)
     assert isinstance(w, Vector)
     return Vector(*np.cross(v.ndarray[:-1], w.ndarray[:-1]))
+
+
+def reflect(vecin, normal):
+    return vecin - normal * 2 * dot(vecin, normal)

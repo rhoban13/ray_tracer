@@ -29,9 +29,19 @@ def write_pixel(canvas, x, y, color):
     canvas.write_pixel(x, y, color)
 
 def canvas_to_ppm(canvas):
-    cv2.imwrite("foo.ppm", canvas._image)
+    '''
+    opencv uses BGR, our Canvas uses RGB.  
+    Transform that here before writing
+    '''
+    as_bgr = np.flip(canvas._image, 2)
+    cv2.imwrite("foo.ppm", as_bgr)
     image = cv2.imread("foo.ppm")
-    return image
+    return np.flip(image, 2)
 
 def canvas_to_png(filepath, canvas):
+    '''
+    opencv uses BGR, our Canvas uses RGB.  
+    Transform that here before writing
+    '''
+    as_bgr = np.flip(canvas._image, 2)
     cv2.imwrite(filepath, canvas._image)

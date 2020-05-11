@@ -1,5 +1,9 @@
+import math
 
-from ray_tracer import R4Vector, Point, Vector, Color, normalize
+from behave import register_type
+from parse_type import TypeBuilder
+
+from ray_tracer import R4Vector, Point, Vector, Color, normalize, reflect
 
 @given(u'{name} = R4Vector({x:g}, {y:g}, {z:g}, {w:g})')
 def step_impl(context, name, x, y, z, w):
@@ -12,6 +16,21 @@ def step_impl(context, name, x, y, z):
 @given(u'{name} = Vector({x:g}, {y:g}, {z:g})')
 def step_impl(context, name, x, y, z):
     setattr(context, name, Vector(x, y, z))
+
+
+parse_interesting_trig_values = TypeBuilder.make_enum({
+    "0": 0, 
+    "√2/2": math.sqrt(2)/2,
+    "1": 1,
+    "-√2/2": -math.sqrt(2)/2,
+    "-1": -1
+})
+register_type(InterestingTrigValue=parse_interesting_trig_values)
+
+
+@given(u'{n} = Vector({dx:InterestingTrigValue}, {dy:InterestingTrigValue}, {dz:InterestingTrigValue})')
+def step_impl(context, n, dx, dy, dz):
+    setattr(context, n, Vector(dx, dy, dz))
 
 @given(u'{name} = Color({red:g}, {green:g}, {blue:g})')
 def step_impl(context, name, red, green, blue):
@@ -49,3 +68,10 @@ def step_impl(context):
 @then(u'a is not a vector')
 def step_impl(context):
     assert not isinstance(context.a, Vector)
+
+@when(u'{r} = reflect({v}, {n})')
+def step_impl(context, r, v, n):
+    _v = getattr(context, v)
+    _n = getattr(context, n)
+    _r = reflect(_v, _n)
+    setattr(context, r, _r)

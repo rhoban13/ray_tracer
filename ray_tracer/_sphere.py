@@ -2,14 +2,16 @@ import math
 
 import numpy as np
 
-from . import Point, dot, Intersection, Intersections
+from . import Point, dot, Intersection, Intersections, normalize
 from ray_tracer.transformations import Transformation, inverse
 from ray_tracer._rays import transform
-
+from ray_tracer._material import Material
 
 class Sphere:
     def __init__(self, center=Point(0, 0, 0), radius=1):
         self.transform = Transformation(np.eye(4))
+        self.material = Material()
+
 
 def intersect(sphere, ray):
     '''
@@ -33,5 +35,19 @@ def intersect(sphere, ray):
     t2 = (-b + math.sqrt(discriminant)) / (2 * a)
     return Intersections(Intersection(t1, sphere), Intersection(t2, sphere))
 
+
 def set_transform(sphere, transform):
     sphere.transform = transform
+
+
+def _project_onto_xyz(vector):
+    proj = np.eye(4)
+    proj[3][3] = 0
+    return Transformation(proj) * vector
+
+def normal_at(sphere, world_point):
+    object_point = inverse(sphere.transform) * world_point
+    object_normal = object_point - Point(0, 0, 0)
+    world_normal = (sphere.transform).inverse().transpose() * object_normal
+    world_normal = _project_onto_xyz(world_normal)
+    return normalize(world_normal)
