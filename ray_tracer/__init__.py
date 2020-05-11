@@ -1,6 +1,6 @@
 from ._rp3_points import R4Vector, Point, Vector, magnitude, normalize, dot, cross, reflect
 
-from ._colors import Color, RED, GREEN, BLUE
+from ._colors import Color, RED, GREEN, BLUE, BLACK, WHITE
 
 from ._rays import Ray, position
 
