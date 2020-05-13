@@ -1,14 +1,15 @@
 Feature: Tuples, Vectors, and Points
 
-Scenario: A Point has nonzero w coordinate
-  Book: A tuple with w=1.0 is a point
+Scenario: A tuple with w=1.0 is a point
   Given a = R4Vector(4.3, -4.2, 3.1, 1.0)
    Then a.x == 4.3
     And a.y == -4.2
     And a.z == 3.1
     And a.w == 1.0
-    And a is a point
-    And a is not a vector
+    And a projects to a point
+    And a does not project to a vector
+    #And a is a point
+    #And a is not a vector
 
 Scenario: A tuple with w=0 is a vector
   Given a = R4Vector(4.3, -4.2, 3.1, 0.0)
@@ -16,18 +17,22 @@ Scenario: A tuple with w=0 is a vector
     And a.y == -4.2
     And a.z == 3.1
     And a.w == 0.0
-    And a is not a point
-    And a is a vector
+    And a projects to a vector
+    And a does not project to a point
+    # And a is not a point
+    # And a is a vector
 
 Scenario: Point() creates tuples with w=1
   Given p = Point(4, -4, 3)
     And q = R4Vector(4, -4, 3, 1)
-   Then p == q
+   Then q projects to p
+   #Then p == q
 
 Scenario: Vector() creates tuples with w=0
   Given v = Vector(4, -4, 3)
     And w = R4Vector(4, -4, 3, 0)
-   Then v == w
+   Then w projects to v
+   #Then v == w
 
 Scenario: Adding two tuples
   Given a1 = R4Vector(3, -2, 5, 1)

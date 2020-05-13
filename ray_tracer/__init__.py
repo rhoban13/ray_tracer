@@ -1,4 +1,4 @@
-from ._rp3_points import R4Vector, Point, Vector, magnitude, normalize, dot, cross, reflect
+from ._rp3_points import R4Vector, Point, Vector, magnitude, normalize, dot, cross, reflect, is_point, is_vector, is_r4vector
 
 from ._colors import Color, RED, GREEN, BLUE, BLACK, WHITE
 

@@ -3,7 +3,7 @@ import math
 from behave import register_type
 from parse_type import TypeBuilder
 
-from ray_tracer import R4Vector, Point, Vector, Color, normalize, reflect
+from ray_tracer import R4Vector, Point, Vector, Color, normalize, reflect, is_point, is_vector, is_r4vector
 
 @given(u'{name} = R4Vector({x:g}, {y:g}, {z:g}, {w:g})')
 def step_impl(context, name, x, y, z, w):
@@ -53,21 +53,53 @@ def step_impl(context, p3, p2, p1):
     _p2 = getattr(context, p2)
     setattr(context, p3, _p1 - _p2)
 
-@then(u'a is a point')
-def step_impl(context):
-    assert isinstance(context.a, Point)
+# @then(u'a is a point')
+# def step_impl(context):
+#     assert is_point(context.a)
+ 
 
-@then(u'a is not a point')
-def step_impl(context):
-    assert not isinstance(context.a, Point)
+# @then(u'a is not a point')
+# def step_impl(context):
+#     assert not is_point(context.a)
     
-@then(u'a is a vector')
-def step_impl(context):
-    assert isinstance(context.a, Vector)
+# @then(u'a is a vector')
+# def step_impl(context):
+#     assert is_vector(context.a)
 
-@then(u'a is not a vector')
-def step_impl(context):
-    assert not isinstance(context.a, Vector)
+# @then(u'a is not a vector')
+# def step_impl(context):
+#     assert not is_vector(context.a)
+
+
+parse_point_or_vector = TypeBuilder.make_enum({
+    "point": is_point, 
+    "vector": is_vector,
+})
+register_type(ElementIn3D=parse_point_or_vector)
+
+@then(u'{a} projects to a {type_checker:ElementIn3D}')
+def step_impl(context, a, type_checker):
+    _a = getattr(context, a)
+    assert is_r4vector(_a)
+    p = _a.project()
+    assert type_checker(p)
+
+
+@then(u'{a} does not project to a {type_checker:ElementIn3D}')
+def step_impl(context, a, type_checker):
+    _a = getattr(context, a)
+    assert is_r4vector(_a)
+    p = _a.project()
+    assert not type_checker(p)
+
+
+@then(u'{q} projects to {p}')
+def step_impl(context, q, p):
+    _q = getattr(context, q)
+    _p = getattr(context, p)
+    assert is_r4vector(_q)
+    assert _q.project() == _p
+
 
 @when(u'{r} = reflect({v}, {n})')
 def step_impl(context, r, v, n):

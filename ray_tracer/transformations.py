@@ -2,7 +2,7 @@ import math
 
 import numpy as np
 
-from ray_tracer import Point, Vector, R4Vector
+from ._rp3_points import fromndarray, is_point, is_vector, is_r4vector
 
 
 class Transformation:
@@ -37,12 +37,12 @@ class Transformation:
         return np.linalg.det(self.ndarray)
 
     def __mul__(self, other):
-        if isinstance(other, Transformation):
+        if is_point(other) or is_vector(other):
+            return fromndarray(np.dot(self.ndarray, other.ndarray))
+        elif is_r4vector(other):
+            return other.__class__(np.dot(self.ndarray, other.ndarray))
+        elif isinstance(other, Transformation): 
             return Transformation(np.dot(self.ndarray, other.ndarray))
-
-        assert isinstance(other, Point) \
-                or isinstance(other, Vector)
-        return R4Vector(*np.dot(self.ndarray, other.ndarray))
 
     def __eq__(self, other):
         assert isinstance(other, Transformation)

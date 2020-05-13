@@ -3,7 +3,7 @@ import math
 from behave import register_type
 from parse_type import TypeBuilder
 
-from ray_tracer import Point
+from ray_tracer._rp3_points import _Point
 from ray_tracer.transformations import (
     inverse, Translation, Scaling, 
     rotation_x, rotation_y, rotation_z,
@@ -59,7 +59,7 @@ def step_impl(context, lhs, T, p):
     _T = getattr(context, T)
     _p = getattr(context, p)
     assert isinstance(_T, Transformation), print(f"{_T} is not a Transformation")
-    assert isinstance(_p, Point), print(f"{_p} is not a Point")
+    assert isinstance(_p, _Point), print(f"{_p} is not a Point")
 
     _lhs = _T * _p
     setattr(context, lhs, _lhs)

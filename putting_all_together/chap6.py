@@ -13,7 +13,7 @@ ray_origin = Point(0, 0, -5)
 # Init canvas
 wall_z = 10
 wall_size = 7
-canvas_pixels = 100 #900
+canvas_pixels = 500 #900
 pixel_size = wall_size / canvas_pixels
 half = wall_size / 2
 
@@ -28,7 +28,7 @@ def paint():
 
     for y in range(canvas_pixels - 1):
         world_y = half - pixel_size * y
-        if y % 10 == 0:
+        if y % 100 == 0:
             print(f"world_y {world_y}")
         for x in range(canvas_pixels - 1):
             world_x = -half + pixel_size * x
@@ -56,7 +56,7 @@ stats = pstats.Stats(pr).sort_stats('tottime')
 stats.print_stats()
 #stats.print_callers()
 
-#path = Path(__file__).parent / "chap6.png"
-#canvas_to_png(str(path), canvas)
+path = Path(__file__).parent / "chap6.png"
+canvas_to_png(str(path), canvas)
 #done_write = time.perf_counter()
 #print(f"Writing png took {(done_write - stop)} sec") 
