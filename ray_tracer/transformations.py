@@ -2,26 +2,63 @@ import math
 
 import numpy as np
 
-from ray_tracer import Point, Vector
+from ray_tracer import Point, Vector, R4Vector
 
 
 class Transformation:
-    def __init__(self, arr):
+    __slots__ = ('ndarray', '_inverse_ndarray', '_inverse_transformation', '_transpose_transformation')
+    def __init__(self, arr, inverse_ndarray=None):
         self.ndarray = np.array(arr)
+        if inverse_ndarray is not None:
+            self._inverse_ndarray = inverse_ndarray
+        elif np.linalg.det(self.ndarray) != 0:
+            self._inverse_ndarray = np.linalg.inv(self.ndarray)
+        else:
+            self._inverse_ndarray = None
+
+        # Lazily set
+        self._inverse_transformation = None
+        self._transpose_transformation = None
 
     def inverse(self):
-        return Transformation(np.linalg.inv(self.ndarray))
+        assert self._inverse_ndarray is not None
+        if self._inverse_transformation is None:
+            self._inverse_transformation = Transformation(self._inverse_ndarray, self.ndarray)
+            self._inverse_transformation._inverse_transformation = self  # circular ref, should use weak ref
+        return self._inverse_transformation
 
     def transpose(self):
-        return Transformation(np.transpose(self.ndarray))
+        if self._transpose_transformation is None:
+            self._transpose_transformation = Transformation(np.transpose(self.ndarray))
+            self._transpose_transformation._transpose_transformation = self  # circular ref, should use weak ref
+        return self._transpose_transformation
+
+    def det(self):
+        return np.linalg.det(self.ndarray)
 
     def __mul__(self, other):
         if isinstance(other, Transformation):
             return Transformation(np.dot(self.ndarray, other.ndarray))
 
-        assert isinstance(other, Point)  \
+        assert isinstance(other, Point) \
                 or isinstance(other, Vector)
-        return np.dot(self.ndarray, other)
+        return R4Vector(*np.dot(self.ndarray, other.ndarray))
+
+    def __eq__(self, other):
+        assert isinstance(other, Transformation)
+        return np.allclose(self.ndarray, other.ndarray, atol=1e-5)
+    
+    def __str__(self):
+        return str(self.ndarray)
+
+    @property
+    def shape(self):
+        return self.ndarray.shape
+
+    def __getitem__(self, indexes_tuple):
+        assert len(indexes_tuple) == 2
+        assert isinstance(indexes_tuple, tuple)
+        return self.ndarray[indexes_tuple]
 
 
 class Translation(Transformation):

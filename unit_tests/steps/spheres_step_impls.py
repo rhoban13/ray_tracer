@@ -62,11 +62,11 @@ def step_impl(context, n, s):
     context.execute_steps(f'when {n} = normal_at({s}, Point(0, {_val}, -{_val}))')
 
 
-@when(u'{lhs} = {rhs}.{property_}')
-def step_impl(context, lhs, rhs, property_):
-    _rhs = getattr(context, rhs)
-    _lhs = getattr(_rhs, property_)
-    setattr(context, lhs, _lhs)
+# @when(u'{lhs} = {rhs}.{property_}')
+# def step_impl(context, lhs, rhs, property_):
+#     _rhs = getattr(context, rhs)
+#     _lhs = getattr(_rhs, property_)
+#     setattr(context, lhs, _lhs)
 
 @step(u'{thing}.{property_} = {value:g}')
 def step_impl(context, thing, property_, value):
@@ -78,3 +78,9 @@ def step_impl(context, thing, property_, value):
     _thing = getattr(context, thing)
     _value = getattr(context, value)
     setattr(_thing, property_, _value)
+
+@when(u'{m} = {s}.material')
+def step_impl(context, m, s):
+    _s = getattr(context, s)
+    setattr(context, m, _s.material)
+

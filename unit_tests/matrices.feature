@@ -82,7 +82,7 @@ Scenario: A matrix multiplied by a tuple
       | 8 | 6 | 4 | 1 |
       | 0 | 0 | 0 | 1 |
     And b = R4Vector(1, 2, 3, 1)
-  Then np.dot(A, b) == R4Vector(18, 24, 33, 1)
+  Then A * b == R4Vector(18, 24, 33, 1)
 
 Scenario: Multiplying a matrix by the identity matrix
   Given the following matrix A:
@@ -90,11 +90,11 @@ Scenario: Multiplying a matrix by the identity matrix
     | 1 | 2 |  4 |  8 |
     | 2 | 4 |  8 | 16 |
     | 4 | 8 | 16 | 32 |
-  Then np.dot(A, np.eye(A.shape[0])) == A
+  Then A * transformations.Transformation(np.eye(A.shape[0])) == A
 
 Scenario: Multiplying the identity matrix by a tuple
   Given a = R4Vector(1, 2, 3, 4)
-  Then np.dot(np.eye(4), a) == a
+  Then transformations.Transformation(np.eye(4)) * a == a
 
   Scenario: Transposing a matrix
   Given the following matrix A:
@@ -102,7 +102,7 @@ Scenario: Multiplying the identity matrix by a tuple
     | 9 | 8 | 0 | 8 |
     | 1 | 8 | 5 | 3 |
     | 0 | 0 | 5 | 8 |
-  Then np.transpose(A) is the following matrix:
+  Then A.transpose() is the following matrix:
     | 0 | 9 | 1 | 0 |
     | 9 | 8 | 8 | 0 |
     | 3 | 0 | 5 | 5 |
@@ -116,7 +116,7 @@ Scenario: Calculating the determinant of a 2x2 matrix
   Given the following 2x2 matrix A:
     |  1 | 5 |
     | -3 | 2 |
-  Then np.linalg.det(A) == 17
+  Then A.det() == 17
 
 ## Skipping these as I'm almost sure they're just used to implement determinants
 # Scenario: A submatrix of a 3x3 matrix is a 2x2 matrix
@@ -195,7 +195,7 @@ Scenario: Testing an invertible matrix for invertibility
     |  5 |  5 |  7 |  6 |
     |  4 | -9 |  3 | -7 |
     |  9 |  1 |  7 | -6 |
-  Then np.linalg.det(A) == -2120
+  Then A.det() == -2120
     And A is invertible
 
 Scenario: Testing a noninvertible matrix for invertibility
@@ -204,7 +204,7 @@ Scenario: Testing a noninvertible matrix for invertibility
     |  9 |  6 |  2 |  6 |
     |  0 | -5 |  1 | -5 |
     |  0 |  0 |  0 |  0 |
-  Then np.linalg.det(A) == 0
+  Then A.det() == 0
     And A is not invertible
 
 # Scenario: Calculating the inverse of a matrix
@@ -231,7 +231,7 @@ Scenario: Calculating the inverse of another matrix
     |  7 |  5 |  6 |  1 |
     | -6 |  0 |  9 |  6 |
     | -3 |  0 | -9 | -4 |
-  Then np.linalg.inv(A) is the following 4x4 matrix:
+  Then A.inverse() is the following 4x4 matrix:
     | -0.15385 | -0.15385 | -0.28205 | -0.53846 |
     | -0.07692 |  0.12308 |  0.02564 |  0.03077 |
     |  0.35897 |  0.35897 |  0.43590 |  0.92308 |
@@ -243,7 +243,7 @@ Scenario: Calculating the inverse of a third matrix
     | -5 | -2 | -6 | -3 |
     | -4 |  9 |  6 |  4 |
     | -7 |  6 |  6 |  2 |
-  Then np.linalg.inv(A) is the following 4x4 matrix:
+  Then A.inverse() is the following 4x4 matrix:
     | -0.04074 | -0.07778 |  0.14444 | -0.22222 |
     | -0.07778 |  0.03333 |  0.36667 | -0.33333 |
     | -0.02901 | -0.14630 | -0.10926 |  0.12963 |
@@ -260,5 +260,5 @@ Scenario: Multiplying a product by its inverse
       |  3 | -1 |  7 |  0 |
       |  7 |  0 |  5 |  4 |
       |  6 | -2 |  0 |  5 |
-    And C = np.dot(A, B)
-  Then np.dot(C, np.linalg.inv(B)) == A
+    And C = A * B
+  Then C * B.inverse() == A

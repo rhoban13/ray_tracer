@@ -21,7 +21,7 @@ def intersect(sphere, ray):
     center = Point(0,0,0)
     radius = 1
 
-    ray2 = transform(ray, inverse(sphere.transform))
+    ray2 = transform(ray, sphere.transform.inverse())
     sphere_to_ray = ray2.origin - center
     a = dot(ray2.direction, ray2.direction)
     b = 2 * dot(ray2.direction, sphere_to_ray)
@@ -39,15 +39,10 @@ def intersect(sphere, ray):
 def set_transform(sphere, transform):
     sphere.transform = transform
 
-
-def _project_onto_xyz(vector):
-    proj = np.eye(4)
-    proj[3][3] = 0
-    return Transformation(proj) * vector
-
 def normal_at(sphere, world_point):
-    object_point = inverse(sphere.transform) * world_point
+    inv_ = sphere.transform.inverse()
+    object_point = inv_ * world_point
     object_normal = object_point - Point(0, 0, 0)
-    world_normal = (sphere.transform).inverse().transpose() * object_normal
-    world_normal = _project_onto_xyz(world_normal)
+    world_normal = inv_.transpose() * object_normal
+    world_normal = world_normal.project_onto_xyz()
     return normalize(world_normal)

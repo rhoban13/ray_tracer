@@ -5,8 +5,6 @@ from typing import Any
 
 class _R4Vector:
     def __init__(self, x: Number, y: Number, z: Number, w: Number):
-        for coord in (x, y, z, w):
-            assert isinstance(coord, Number),  f"{coord} is not a Number"
         self.ndarray = np.array((x, y, z, w))
 
     @property
@@ -26,10 +24,14 @@ class _R4Vector:
         return self.ndarray[3]
  
     def __add__(self, other):
-        return R4Vector(*(self.ndarray + other.ndarray))
+        _result = self.ndarray + other.ndarray
+        return R4Vector(_result[0], _result[1], _result[2], _result[3])
+        #return R4Vector(*(self.ndarray + other.ndarray))
 
     def __sub__(self, other):
-        return R4Vector(*(self.ndarray - other.ndarray))
+        _result = self.ndarray - other.ndarray
+        return R4Vector(_result[0], _result[1], _result[2], _result[3])
+        #return R4Vector(*(self.ndarray - other.ndarray))
 
     def __neg__(self):
         return R4Vector(*(-self.ndarray))
@@ -42,41 +44,9 @@ class _R4Vector:
         assert isinstance(scalar, Number)
         return R4Vector(*(self.ndarray / scalar))
     
-    def __array_ufunc__(self, ufunc, method, *inputs, **kwargs):
-        if method != "__call__":
-            return NotImplemented
+    def project_onto_xyz(self):
+        return Vector(self.ndarray[0], self.ndarray[1], self.ndarray[2], 0)
 
-        my_inputs = []
-        for input in inputs:
-            if isinstance(input, self.__class__):
-                my_inputs.append(input.ndarray)
-            else:
-                my_inputs.append(input)
-        
-        from_base = ufunc(*my_inputs, **kwargs)
-        return self.__class__(*from_base)
-        
-
-    def __array_function__(self, func, types, args, kwargs):
-        if func not in HANDLED_FUNCTIONS:
-            return NotImplemented
-        # https://docs.scipy.org/doc/numpy/user/basics.dispatch.html
-        if types != (np.ndarray, self.__class__):
-            return NotImplemented
-        return HANDLED_FUNCTIONS[func](*args, **kwargs)
-
-HANDLED_FUNCTIONS = dict()
-
-def implements(np_function):
-    "Register an __array_function__ implementation for DiagonalArray objects."
-    def decorator(func):
-        HANDLED_FUNCTIONS[np_function] = func
-        return func
-    return decorator
-
-@implements(np.dot)
-def dot(A, b):
-    return R4Vector(*(A.dot(b.ndarray)))
 
 class Point(_R4Vector):
     """
@@ -120,6 +90,14 @@ class Vector(_R4Vector):
     def __str__(self):
         return f"Vector({round(self.x, 5)}, {round(self.y, 5)}, {round(self.z, 5)})"
 
+    def magnitude(self):
+        return np.linalg.norm(self.ndarray)
+
+    def normalize(self):
+        mag = self.magnitude()
+        if mag == 0:
+            return self
+        return Vector(*(self.ndarray / mag))
 
 def R4Vector(x, y, z, w):
     if w == 0:
@@ -130,20 +108,17 @@ def R4Vector(x, y, z, w):
 
 def magnitude(v):
     assert isinstance(v, Vector)
-    return np.linalg.norm(v.ndarray[:-1])
+    return v.magnitude()
 
 
 def normalize(v):
     assert isinstance(v, Vector)
-    mag = magnitude(v)
-    if mag == 0:
-        return v
-    return v / magnitude(v)
+    return v.normalize()
 
 
 def dot(v, w):
-    assert isinstance(v, Vector)
-    assert isinstance(w, Vector)
+    assert isinstance(v, Vector), f"v is a {type(v)}"
+    assert isinstance(w, Vector), f"w is a {type(w)}"
     return np.dot(v.ndarray, w.ndarray)
 
 
