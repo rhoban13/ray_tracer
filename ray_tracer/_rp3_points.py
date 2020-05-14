@@ -56,14 +56,14 @@ class _R4Vector:
         else:
             return _Point(self.ndarray)
 
-class _Point(_R4Vector):
+class _Point:
     """
     This represents a point in the affine patch of RP^3, 
     identified with a eucliden point in R^3
     """
     def __init__(self, ndarray):
-        assert ndarray[3] != 0
-        super().__init__(ndarray)
+        assert ndarray[3] == 1
+        self.ndarray = ndarray
 
     def __eq__(self, other):
         assert isinstance(other, _Point), f"rhs has type {type(other)}"
@@ -74,10 +74,7 @@ class _Point(_R4Vector):
         return _Point(self.ndarray + other.ndarray)
 
     def __sub__(self, other):
-        if isinstance(other, _Point):
-            return _Vector(self.ndarray - other.ndarray)
-        elif isinstance(other, _Vector):
-            return _Point(self.ndarray - other.ndarray)
+        return fromndarray(self.ndarray - other.ndarray)
 
     def __neg__(self):
         return _Point(-self.ndarray)
@@ -85,14 +82,20 @@ class _Point(_R4Vector):
     def __str__(self):
         return f"_Point({round(self.x, 2)}, {round(self.y, 2)}, {round(self.z, 2)})"
     
-class _Vector(_R4Vector):
+    def project_onto_xyz(self):
+        _result = self.ndarray.copy()
+        _result[3] = 0
+        return _Vector(_result)
+
+
+class _Vector:
     """
     This represents a point at the boundary at infinity in RP^3
     This is identified with a direction in R^3
     """
     def __init__(self, ndarray):
         assert ndarray[3] == 0
-        super().__init__(ndarray)
+        self.ndarray = ndarray
 
     def __eq__(self, other):
         assert isinstance(other, _Vector)
@@ -125,6 +128,8 @@ class _Vector(_R4Vector):
             return self
         return _Vector(self.ndarray / mag)
 
+    def project_onto_xyz(self):
+        return self
 
 # Public creators using individual coordinates
 def Point(x, y, z):
@@ -137,19 +142,14 @@ def Vector(x, y, z):
 
 def R4Vector(x, y, z, w):
     return _R4Vector(np.array((x, y, z, w)))
-    # if w == 0:
-    #     return Vector(x, y, z)
-    # else:
-    #     return Point(x/w, y/w, z/w)
-
-
 
 
 def fromndarray(ndarray):
+    if ndarray[3] == 1:
+        return _Point(ndarray)
     if ndarray[3] == 0:
         return _Vector(ndarray)
-    else:
-        return _Point(ndarray)
+    return _Point(ndarray/ndarray[-1])
 
 
 def is_point(thing):
@@ -175,8 +175,8 @@ def normalize(v):
 
 
 def dot(v, w):
-    assert isinstance(v, _Vector), f"v is a {type(v)}"
-    assert isinstance(w, _Vector), f"w is a {type(w)}"
+    #assert isinstance(v, _Vector), f"v is a {type(v)}"
+    #assert isinstance(w, _Vector), f"w is a {type(w)}"
     return np.dot(v.ndarray, w.ndarray)
 
 
