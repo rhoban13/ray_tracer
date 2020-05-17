@@ -65,6 +65,22 @@ class _Point:
         assert ndarray[3] == 1
         self.ndarray = ndarray
 
+    @property
+    def x(self):
+        return self.ndarray[0]
+
+    @property
+    def y(self):
+        return self.ndarray[1]
+
+    @property
+    def z(self):
+        return self.ndarray[2]
+
+    @property
+    def w(self):
+        return self.ndarray[3]
+
     def __eq__(self, other):
         assert isinstance(other, _Point), f"rhs has type {type(other)}"
         return np.allclose(self.ndarray, other.ndarray)
@@ -80,13 +96,9 @@ class _Point:
         return _Point(-self.ndarray)
 
     def __str__(self):
-        return f"_Point({round(self.x, 2)}, {round(self.y, 2)}, {round(self.z, 2)})"
+        digits = 5
+        return f"_Point({round(self.x, digits)}, {round(self.y, digits)}, {round(self.z, digits)})"
     
-    def project_onto_xyz(self):
-        _result = self.ndarray.copy()
-        _result[3] = 0
-        return _Vector(_result)
-
 
 class _Vector:
     """
@@ -96,6 +108,22 @@ class _Vector:
     def __init__(self, ndarray):
         assert ndarray[3] == 0
         self.ndarray = ndarray
+
+    @property
+    def x(self):
+        return self.ndarray[0]
+
+    @property
+    def y(self):
+        return self.ndarray[1]
+
+    @property
+    def z(self):
+        return self.ndarray[2]
+
+    @property
+    def w(self):
+        return self.ndarray[3]
 
     def __eq__(self, other):
         assert isinstance(other, _Vector)
@@ -127,9 +155,6 @@ class _Vector:
         if mag == 0:
             return self
         return _Vector(self.ndarray / mag)
-
-    def project_onto_xyz(self):
-        return self
 
 # Public creators using individual coordinates
 def Point(x, y, z):

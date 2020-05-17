@@ -33,6 +33,14 @@ class Transformation:
             self._transpose_transformation._transpose_transformation = self  # circular ref, should use weak ref
         return self._transpose_transformation
 
+    def linear_component(self):
+        '''Return the linear piece of this projective transformation'''
+        c = self.ndarray.copy()
+        for i in range(2):
+            c[(3,i)] = 0
+            c[(i,3)] = 0
+        return Transformation(c, np.linalg.inv(c))
+
     def det(self):
         return np.linalg.det(self.ndarray)
 

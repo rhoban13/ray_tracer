@@ -39,10 +39,11 @@ def intersect(sphere, ray):
 def set_transform(sphere, transform):
     sphere.transform = transform
 
+
 def normal_at(sphere, world_point):
     inv_ = sphere.transform.inverse()
     object_point = inv_ * world_point
     object_normal = object_point - Point(0, 0, 0)
-    world_normal = inv_.transpose() * object_normal
-    world_normal = world_normal.project_onto_xyz()
+    linear_component = sphere.transform.linear_component()
+    world_normal = linear_component.inverse().transpose() * object_normal
     return normalize(world_normal)
