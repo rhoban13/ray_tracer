@@ -73,7 +73,7 @@ def step_impl(context, shape, first_or_second, world):
     if first_or_second == 'first':
         setattr(context, shape, _world.objects[0])
     elif first_or_second == 'second':
-        setattr(context,shape, _world.objects[1])
+        setattr(context, shape, _world.objects[1])
     else:
         raise NotImplementedError('Unknown')
 

@@ -2,8 +2,14 @@ import cProfile
 from pathlib import Path
 import pstats
 
-from ray_tracer import Point, Sphere, RED, WHITE, Ray, normalize, intersect, hit, Material, Color, point_light, position, normal_at, lighting
 from ray_tracer.canvas import Canvas, write_pixel, canvas_to_png
+from ray_tracer.colors import Color, RED, WHITE
+from ray_tracer.intersections import intersect, hit
+from ray_tracer.lights import point_light
+from ray_tracer.material import Material, lighting
+from ray_tracer.rays import Ray, position
+from ray_tracer.sphere import Sphere, normal_at
+from ray_tracer.tuples import Point, normalize
 
 
 ray_origin = Point(0, 0, -5)
