@@ -2,17 +2,16 @@ from ray_tracer.rays import Ray, transform, position
 from ray_tracer.tuples import Point, Vector
 
 
-@when(u'{r} = Ray({origin}, {direction})')
+@step(u'{r} = Ray(Point({x:g}, {y:g}, {z:g}), Vector({dx:g}, {dy:g}, {dz:g}))')
+def step_impl(context,r, x, y, z, dx, dy, dz):
+    _r = Ray(Point(x, y, z), Vector(dx, dy, dz))
+    setattr(context, r, _r)
+
+@step(u'{r} = Ray({origin}, {direction})')
 def step_impl(context, r, origin, direction):
     _origin = getattr(context, origin)
     _direction = getattr(context, direction)
     _r = Ray(_origin, _direction)
-    setattr(context, r, _r)
-
-
-@given(u'{r} = Ray(Point({x:g}, {y:g}, {z:g}), Vector({dx:g}, {dy:g}, {dz:g}))')
-def step_impl(context,r, x, y, z, dx, dy, dz):
-    _r = Ray(Point(x, y, z), Vector(dx, dy, dz))
     setattr(context, r, _r)
 
 

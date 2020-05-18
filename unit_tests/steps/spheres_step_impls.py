@@ -1,6 +1,7 @@
 import math
 
-from ray_tracer.sphere import Sphere, set_transform, normal_at, intersect
+from ray_tracer.intersections import intersect
+from ray_tracer.sphere import Sphere, set_transform, normal_at
 from ray_tracer.transformations import Scaling, Translation, rotation_z
 from ray_tracer.tuples import Point
 
