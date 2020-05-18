@@ -3,7 +3,8 @@ import math
 from behave import register_type
 from parse_type import TypeBuilder
 
-from ray_tracer import R4Vector, Point, Vector, Color, normalize, reflect, is_point, is_vector, is_r4vector
+from ray_tracer.tuples import R4Vector, Point, Vector, normalize, reflect, is_point, is_vector, is_r4vector
+from ray_tracer.colors import Color
 
 @given(u'{name} = R4Vector({x:g}, {y:g}, {z:g}, {w:g})')
 def step_impl(context, name, x, y, z, w):

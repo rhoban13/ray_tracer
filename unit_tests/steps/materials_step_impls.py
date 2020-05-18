@@ -1,4 +1,4 @@
-from ray_tracer import Material, lighting
+from ray_tracer.material import Material, lighting
 
 @given(u'{m} = Material()')
 def step_impl(context, m):

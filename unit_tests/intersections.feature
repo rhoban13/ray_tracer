@@ -7,15 +7,15 @@ Scenario: An intersection encapsulates t and object
     And i.object == s
 
 # Scenario: Precomputing the state of an intersection
-#   Given r â† ray(point(0, 0, -5), vector(0, 0, 1))
-#     And shape â† sphere()
-#     And i â† intersection(4, shape)
-#   When comps â† prepare_computations(i, r)
-#   Then comps.t = i.t
-#     And comps.object = i.object
-#     And comps.point = point(0, 0, -1)
-#     And comps.eyev = vector(0, 0, -1)
-#     And comps.normalv = vector(0, 0, -1)
+#   Given r = Ray(Point(0, 0, -5), Vector(0, 0, 1))
+#     And shape = Sphere()
+#     And i = Intersection(4, shape)
+#   When comps = prepare_computations(i, r)
+#   Then comps.t == i.t
+#     And comps.object == i.object
+#     And comps.point == Point(0, 0, -1)
+#     And comps.eyev == Vector(0, 0, -1)
+#     And comps.normalv == Vector(0, 0, -1)
 
 # Scenario: Precomputing the reflection vector
 #   Given shape â† plane()

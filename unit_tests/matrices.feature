@@ -90,11 +90,11 @@ Scenario: Multiplying a matrix by the identity matrix
     | 1 | 2 |  4 |  8 |
     | 2 | 4 |  8 | 16 |
     | 4 | 8 | 16 | 32 |
-  Then A * transformations.Transformation(np.eye(A.shape[0])) == A
+  Then A * Transformation(np.eye(A.shape[0])) == A
 
 Scenario: Multiplying the identity matrix by a tuple
   Given a = R4Vector(1, 2, 3, 4)
-  Then transformations.Transformation(np.eye(4)) * a == a
+  Then Transformation(np.eye(4)) * a == a
 
   Scenario: Transposing a matrix
   Given the following matrix A:

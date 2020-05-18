@@ -1,7 +1,7 @@
 import cv2
 import numpy as np
 
-from . import Color
+from ray_tracer.colors import Color
 
 class Canvas:
     def __init__(self, width, height):

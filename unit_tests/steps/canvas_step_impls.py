@@ -1,7 +1,7 @@
 import numpy as np
 
 from ray_tracer.canvas import Canvas, pixel_at, write_pixel, canvas_to_ppm
-from ray_tracer import Color
+from ray_tracer.colors import Color
 
 @given(u'{name} = Canvas({width:d}, {height:d})')
 def step_impl(context, name, width, height):

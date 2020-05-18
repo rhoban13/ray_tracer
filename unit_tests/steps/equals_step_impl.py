@@ -3,9 +3,12 @@ import math
 
 import numpy as np
 
-from ray_tracer import *
 from ray_tracer.canvas import pixel_at
-
+from ray_tracer.colors import Color
+from ray_tracer.material import Material
+from ray_tracer.rays import position
+from ray_tracer.transformations import Transformation
+from ray_tracer.tuples import Point, R4Vector, Vector, normalize, magnitude, dot, cross
 
 def _get_names_needed(*expressions):
     output = set()

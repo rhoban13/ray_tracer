@@ -2,7 +2,7 @@ import math
 
 import numpy as np
 
-from ._rp3_points import fromndarray, is_point, is_vector, is_r4vector
+from ray_tracer.tuples import fromndarray, is_point, is_vector, is_r4vector
 
 
 class Transformation:

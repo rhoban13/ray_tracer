@@ -1,7 +1,8 @@
 from behave import register_type
 from parse_type import TypeBuilder
 
-from ray_tracer import Intersection, Intersections, hit
+from ray_tracer.intersections import Intersection, Intersections, hit, prepare_computations
+from ray_tracer.rays import Ray
 
 
 @step(u'{i} = Intersection({t:g}, {obj})')
@@ -32,3 +33,14 @@ def step_impl(context, i, xs):
 def step_impl(context, i):
     _i = getattr(context, i)
     assert _i is None
+
+
+@when(u'{comps} = prepare_computations({i}, {r})')
+def step_impl(context, comps, i, r):
+    _i = getattr(context, i)
+    assert isinstance(_i, Intersection)
+    _r = getattr(context, r)
+    assert isinstance(_r, Ray)
+
+    _comps = prepare_computations(_i, _r)
+    setattr(context, comps, _comps)

@@ -3,7 +3,7 @@ import math
 from behave import register_type
 from parse_type import TypeBuilder
 
-from ray_tracer._rp3_points import _Point
+from ray_tracer.tuples import _Point
 from ray_tracer.transformations import (
     inverse, Translation, Scaling, 
     rotation_x, rotation_y, rotation_z,

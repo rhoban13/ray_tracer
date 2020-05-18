@@ -1,4 +1,6 @@
-from ray_tracer import point_light, Point, Color
+from ray_tracer.colors import Color
+from ray_tracer.lights import point_light
+from ray_tracer.tuples import Point
 
 
 @step(u'{light} = point_light(Point({x:g}, {y:g}, {z:g}), Color({red:g}, {green:g}, {blue:g}))')
