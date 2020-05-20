@@ -47,27 +47,27 @@ Scenario: Shading an intersection from the inside
     And c = shade_hit(w, comps)
   Then c == Color(0.90498, 0.90498, 0.90498)
 
-# Scenario: The color when a ray misses
-#   Given w â† default_world()
-#     And r â† ray(point(0, 0, -5), vector(0, 1, 0))
-#   When c â† color_at(w, r)
-#   Then c = color(0, 0, 0)
+Scenario: The color when a ray misses
+  Given w = default_world()
+    And r = Ray(Point(0, 0, -5), Vector(0, 1, 0))
+  When c = color_at(w, r)
+  Then c == Color(0, 0, 0)
 
-# Scenario: The color when a ray hits
-#   Given w â† default_world()
-#     And r â† ray(point(0, 0, -5), vector(0, 0, 1))
-#   When c â† color_at(w, r)
-#   Then c = color(0.38066, 0.47583, 0.2855)
+Scenario: The color when a ray hits
+  Given w = default_world()
+    And r = Ray(Point(0, 0, -5), Vector(0, 0, 1))
+  When c = color_at(w, r)
+  Then c == Color(0.38066, 0.47583, 0.2855)
 
-# Scenario: The color with an intersection behind the ray
-#   Given w â† default_world()
-#     And outer â† the first object in w
-#     And outer.material.ambient â† 1
-#     And inner â† the second object in w
-#     And inner.material.ambient â† 1
-#     And r â† ray(point(0, 0, 0.75), vector(0, 0, -1))
-#   When c â† color_at(w, r)
-#   Then c = inner.material.color
+Scenario: The color with an intersection behind the ray
+  Given w = default_world()
+    And outer = the first object in w
+    And outer.material.ambient = 1
+    And inner = the second object in w
+    And inner.material.ambient = 1
+    And r = Ray(Point(0, 0, 0.75), Vector(0, 0, -1))
+  When c = color_at(w, r)
+  Then c == inner.material.color
 
 # Scenario: There is no shadow when nothing is collinear with point and light
 #   Given w â† default_world()

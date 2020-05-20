@@ -1,10 +1,12 @@
 import itertools
 import re
 
+from behave import given, when, then, step
+
 from ray_tracer.colors import Color
 from ray_tracer.sphere import Sphere
-from ray_tracer.transformations import Scaling
-from ray_tracer.world import World, default_world, intersect_world, shade_hit
+from ray_tracer.transformations import Scaling  # noqa
+from ray_tracer.world import World, default_world, intersect_world, shade_hit, color_at
 
 @given(u'{w} = World()')
 def step_impl(context, w):
@@ -27,9 +29,7 @@ def step_impl(context, w):
 def step_impl(context, s):
     _s = Sphere()
     for row in itertools.chain([context.table.headings], context.table):
-        print(row)
-        k,v = row
-        print("WTF", k)
+        k, v = row
         if k.startswith('material'):
             _, materialprop = k.split('.')
             if materialprop == "color":
@@ -83,4 +83,12 @@ def step_impl(context, c, world, comps):
     _world = getattr(context, world)
     _comps = getattr(context, comps)
     _c = shade_hit(_world, _comps)
+    setattr(context, c, _c)
+
+
+@when(u'{c} = color_at({w}, {r})')
+def step_impl(context, c, w, r):
+    _w = getattr(context, w)
+    _r = getattr(context, r)
+    _c = color_at(_w, _r)
     setattr(context, c, _c)

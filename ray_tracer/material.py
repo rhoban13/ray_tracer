@@ -46,6 +46,7 @@ def lighting(material, light, point, eyev, normalv):
             # compute the specular contribution
             factor = pow(reflect_dot_eye, material.shininess)
             specular = light.intensity * material.specular * factor
-    
+
     # Add the three contributions together to get the final shading
+
     return ambient + diffuse + specular

@@ -12,5 +12,6 @@ class Light:
     def __str__(self):
         return f"Light<position={self.position}, intensity={self.intensity}>"
 
+
 def point_light(position, intensity):
     return Light(position, intensity)

@@ -1,5 +1,7 @@
 import math
 
+from behave import given, when, then, step
+
 from ray_tracer.intersections import intersect
 from ray_tracer.sphere import Sphere, set_transform, normal_at
 from ray_tracer.transformations import Scaling, Translation, rotation_z
@@ -10,6 +12,7 @@ from ray_tracer.tuples import Point
 def step_impl(context, s):
     _s = Sphere()
     setattr(context, s, _s)
+
 
 @when(u'{xs} = intersect({s}, {r})')
 def step_impl(context, xs, s, r):
@@ -40,6 +43,7 @@ def step_impl(context, n, s, x, y, z):
     _n = normal_at(_s, _p)
     setattr(context, n, _n)
 
+
 @when(u'n = normal_at({s}, Point(√3/3, √3/3, √3/3))')
 def step_impl(context, s):
     _val = math.sqrt(3)/3
@@ -65,11 +69,12 @@ def step_impl(context, n, s):
     context.execute_steps(f'when {n} = normal_at({s}, Point(0, {_val}, -{_val}))')
 
 
-# @when(u'{lhs} = {rhs}.{property_}')
-# def step_impl(context, lhs, rhs, property_):
-#     _rhs = getattr(context, rhs)
-#     _lhs = getattr(_rhs, property_)
-#     setattr(context, lhs, _lhs)
+@step(u'{thing}.{property_}.{other_property_} = {value:g}')
+def step_impl(context, thing, property_, other_property_, value):
+    _thing = getattr(context, thing)
+    _property = getattr(_thing, property_)
+    setattr(_property, other_property_, value)
+
 
 @step(u'{thing}.{property_} = {value:g}')
 def step_impl(context, thing, property_, value):
@@ -86,4 +91,3 @@ def step_impl(context, thing, property_, value):
 def step_impl(context, m, s):
     _s = getattr(context, s)
     setattr(context, m, _s.material)
-
