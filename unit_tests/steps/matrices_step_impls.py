@@ -23,24 +23,21 @@ def step_impl(context, n, m, name):
     assert matrix.shape == (n, m), f"{matrix.shape} != {(n,m)}"
     setattr(context, name, matrix)
 
+
 @then(u'{expr} is the following {n:d}x{m:d} matrix')
 def step_impl(context, expr, n, m):
     expected = table_to_matrix(context.table)
     setattr(context, "expected", expected)
-
-    
-    print(expected)
-    print("====")
-    print(expr)
-
     context.execute_steps(f"then {expr} == expected")
     assert expected.shape == (n, m)
+
 
 @then(u'{expr} is the following matrix')
 def step_impl(context, expr):
     expected = table_to_matrix(context.table)
     setattr(context, "expected", expected)
     context.execute_steps(f"then {expr} == expected")
+
 
 parse_is_or_is_not = TypeBuilder.make_enum({"is": True, "is not": False})
 register_type(IsOrIsNot=parse_is_or_is_not)

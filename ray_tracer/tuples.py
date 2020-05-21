@@ -56,6 +56,7 @@ class _R4Vector:
         else:
             return _Point(self.ndarray)
 
+
 class _Point:
     """
     This represents a point in the affine patch of RP^3, 
@@ -200,8 +201,6 @@ def normalize(v):
 
 
 def dot(v, w):
-    #assert isinstance(v, _Vector), f"v is a {type(v)}"
-    #assert isinstance(w, _Vector), f"w is a {type(w)}"
     return np.dot(v.ndarray, w.ndarray)
 
 

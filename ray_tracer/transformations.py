@@ -2,11 +2,15 @@ import math
 
 import numpy as np
 
-from ray_tracer.tuples import fromndarray, is_point, is_vector, is_r4vector
+from ray_tracer.tuples import (
+    fromndarray, is_point, is_vector, is_r4vector,
+    cross, normalize
+)
 
 
 class Transformation:
     __slots__ = ('ndarray', '_inverse_ndarray', '_inverse_transformation', '_transpose_transformation')
+
     def __init__(self, arr, inverse_ndarray=None):
         self.ndarray = np.array(arr)
         if inverse_ndarray is not None:
@@ -30,15 +34,15 @@ class Transformation:
     def transpose(self):
         if self._transpose_transformation is None:
             self._transpose_transformation = Transformation(np.transpose(self.ndarray))
-            self._transpose_transformation._transpose_transformation = self  # circular ref, should use weak ref
+        self._transpose_transformation._transpose_transformation = self  # circular ref, should use weak ref
         return self._transpose_transformation
 
     def linear_component(self):
         '''Return the linear piece of this projective transformation'''
         c = self.ndarray.copy()
         for i in range(2):
-            c[(3,i)] = 0
-            c[(i,3)] = 0
+            c[(3, i)] = 0
+            c[(i, 3)] = 0
         return Transformation(c, np.linalg.inv(c))
 
     def det(self):
@@ -49,13 +53,13 @@ class Transformation:
             return fromndarray(np.dot(self.ndarray, other.ndarray))
         elif is_r4vector(other):
             return other.__class__(np.dot(self.ndarray, other.ndarray))
-        elif isinstance(other, Transformation): 
+        elif isinstance(other, Transformation):
             return Transformation(np.dot(self.ndarray, other.ndarray))
 
     def __eq__(self, other):
         assert isinstance(other, Transformation)
         return np.allclose(self.ndarray, other.ndarray, atol=1e-5)
-    
+
     def __str__(self):
         return str(self.ndarray)
 
@@ -102,6 +106,7 @@ class Scaling(Transformation):
             1/self.ndarray[2, 2]
         )
 
+
 # Ugly - think here
 class RotationX(Transformation):
     def __init__(self, radians):
@@ -116,12 +121,14 @@ class RotationX(Transformation):
     def inverse(self):
         return type(self)(-self._angle)
 
+
 class RotationY(Transformation):
     def __init__(self, radians):
+        # Note - Left hand rule!
         super().__init__([
                 [math.cos(radians), 0, math.sin(radians), 0],
                 [0, 1, 0, 0],
-                [math.sin(radians), 0, math.cos(radians), 0],
+                [-math.sin(radians), 0, math.cos(radians), 0],
                 [0, 0, 0, 1]
         ])
         self._angle = radians
@@ -169,5 +176,20 @@ class Shearing(Transformation):
 def inverse(transformation):
     return transformation.inverse()
 
+
 def transpose(transformation):
     return transformation.transpose()
+
+
+def view_transform(from_, to, up):
+    forward = normalize(to - from_)
+    left = cross(forward, normalize(up))
+    true_up = cross(left, forward)
+    orientation = Transformation(np.stack((
+        left.ndarray,
+        true_up.ndarray,
+        -forward.ndarray,
+        [0, 0, 0, 1]
+    )))
+    translation = Translation(-from_.x, -from_.y, -from_.z)
+    return orientation * translation

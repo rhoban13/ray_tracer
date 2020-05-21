@@ -7,8 +7,9 @@ from ray_tracer.canvas import pixel_at
 from ray_tracer.colors import Color
 from ray_tracer.material import Material
 from ray_tracer.rays import position
-from ray_tracer.transformations import Transformation
+from ray_tracer.transformations import Transformation, Scaling, Translation
 from ray_tracer.tuples import Point, R4Vector, Vector, normalize, magnitude, dot, cross
+
 
 def _get_names_needed(*expressions):
     output = set()
@@ -17,6 +18,7 @@ def _get_names_needed(*expressions):
         names =  set(node.id for node in ast.walk(root) if isinstance(node, ast.Name))
         output.update(names)
     return output
+
 
 @then(u'{lhs} == {rhs}')
 def step_impl(context, lhs, rhs):
