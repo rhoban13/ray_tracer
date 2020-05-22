@@ -41,12 +41,14 @@ Scenario: Constructing a ray when the camera is transformed
    And r.direction == Vector(math.sqrt(2)/2, 0, -math.sqrt(2)/2)
     #And r.direction == Vector(√2/2, 0, -√2/2)
 
-# Scenario: Rendering a world with a camera
-#   Given w â† default_world()
-#     And c â† camera(11, 11, Ï€/2)
-#     And from â† point(0, 0, -5)
-#     And to â† point(0, 0, 0)
-#     And up â† vector(0, 1, 0)
-#     And c.transform â† view_transform(from, to, up)
-#   When image â† render(c, w)
-#   Then pixel_at(image, 5, 5) = color(0.38066, 0.47583, 0.2855)
+Scenario: Rendering a world with a camera
+  Given w = default_world()
+    And c = Camera(11, 11, π/2)
+    And from = Point(0, 0, -5)
+    And to = Point(0, 0, 0)
+    And up = Vector(0, 1, 0)
+    And vt = view_transform(from, to, up)
+    And c.transform = vt
+    #And c.transform = view_transform(from, to, up)
+  When image = render(c, w)
+  Then pixel_at(image, 5, 5) == Color(0.38066, 0.47583, 0.2855)

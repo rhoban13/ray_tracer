@@ -17,6 +17,28 @@ class World():
     def __str__(self):
         return f"World <objects={self.objects}, light={self.light}"
 
+    def intersect_world(self, ray):
+        intersections = Intersections()
+        for o in self.objects:
+            intersections.extend(intersect(o, ray))
+        return intersections
+
+    def shade_hit(self, comps):
+        return lighting(
+            comps.object.material,
+            self.light,
+            comps.point,
+            comps.eyev,
+            comps.normalv)
+
+    def color_at(self, ray):
+        intersections = intersect_world(self, ray)
+        a_hit = hit(intersections)
+        if a_hit is None:
+            return BLACK
+        comps = prepare_computations(a_hit, ray)
+        return shade_hit(self, comps)
+
 
 def default_world():
     light = point_light(Point(-10, 10, -10), Color(1, 1, 1))
@@ -32,27 +54,12 @@ def default_world():
 
 
 def intersect_world(world, ray):
-    intersections = Intersections()
-    for o in world.objects:
-        intersections.extend(intersect(o, ray))
-
-    return intersections
+    return world.intersect_world(ray)
 
 
 def shade_hit(world, comps):
-    return lighting(
-        comps.object.material,
-        world.light,
-        comps.point,
-        comps.eyev,
-        comps.normalv)
+    return world.shade_hit(comps)
 
 
 def color_at(world, ray):
-    intersections = intersect_world(world, ray)
-    a_hit = hit(intersections)
-    if a_hit is None:
-        print("No hit")
-        return BLACK
-    comps = prepare_computations(a_hit, ray)
-    return shade_hit(world, comps)
+    return world.color_at(ray)

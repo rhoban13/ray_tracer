@@ -85,7 +85,7 @@ def step_impl(context, lhs, T, p):
     setattr(context, lhs, _lhs)
 
 
-@when(u'{t} = view_transform({from_}, {to}, {up})')
+@step(u'{t} = view_transform({from_}, {to}, {up})')
 def step_impl(context, t, from_, to, up):
     _from = getattr(context, from_)
     _to = getattr(context, to)

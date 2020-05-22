@@ -1,5 +1,6 @@
 import numpy as np
 
+from ray_tracer.canvas import Canvas
 from ray_tracer.rays import Ray
 from ray_tracer.transformations import Transformation
 from ray_tracer.tuples import Point, normalize
@@ -23,19 +24,32 @@ class Camera:
 
         self.pixel_size = (self.half_width * 2) / hsize
 
+    def ray_for_pixel(self, x, y):
+        xoffset = (x + .5) * self.pixel_size
+        yoffset = (y + .5) * self.pixel_size
+
+        world_x = self.half_width - xoffset
+        world_y = self.half_height - yoffset
+
+        pixel = self.transform.inverse() * Point(world_x, world_y, -1)
+        origin = self.transform.inverse() * Point(0, 0, 0)
+
+        direction = normalize(pixel - origin)
+        return Ray(origin, direction)
+
+    def render(self, world):
+        image = Canvas(self.hsize, self.vsize)
+        for y in range(0, self.vsize - 1):
+            for x in range(0, self.hsize - 1):
+                ray = self.ray_for_pixel(x, y)
+                color = world.color_at(ray)
+                image.write_pixel(x, y, color)
+        return image
+
 
 def ray_for_pixel(camera, x, y):
-    xoffset = (x + .5) * camera.pixel_size
-    yoffset = (y + .5) * camera.pixel_size
+    return camera.ray_for_pixel(x, y)
 
-    world_x = camera.half_width - xoffset
-    world_y = camera.half_height - yoffset
-    print(world_x)
-    print(world_y)
 
-    pixel = camera.transform.inverse() * Point(world_x, world_y, -1)
-    print(pixel)
-    origin = camera.transform.inverse() * Point(0, 0, 0)
-    print(origin)
-    direction = normalize(pixel - origin)
-    return Ray(origin, direction)
+def render(camera, world):
+    return camera.render(world)
