@@ -99,7 +99,7 @@ class _Point:
     def __str__(self):
         digits = 5
         return f"_Point({round(self.x, digits)}, {round(self.y, digits)}, {round(self.z, digits)})"
-    
+
 
 class _Vector:
     """
@@ -156,6 +156,7 @@ class _Vector:
         if mag == 0:
             return self
         return _Vector(self.ndarray / mag)
+
 
 # Public creators using individual coordinates
 def Point(x, y, z):

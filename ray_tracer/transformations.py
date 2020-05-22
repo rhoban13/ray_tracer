@@ -40,7 +40,7 @@ class Transformation:
     def linear_component(self):
         '''Return the linear piece of this projective transformation'''
         c = self.ndarray.copy()
-        for i in range(2):
+        for i in range(3):
             c[(3, i)] = 0
             c[(i, 3)] = 0
         return Transformation(c, np.linalg.inv(c))

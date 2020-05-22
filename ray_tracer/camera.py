@@ -1,3 +1,4 @@
+import logging
 import numpy as np
 
 from ray_tracer.canvas import Canvas
@@ -40,6 +41,8 @@ class Camera:
     def render(self, world):
         image = Canvas(self.hsize, self.vsize)
         for y in range(0, self.vsize - 1):
+            if y % 100 == 0:
+                logging.info("Working pixels y=%s", y)
             for x in range(0, self.hsize - 1):
                 ray = self.ray_for_pixel(x, y)
                 color = world.color_at(ray)
