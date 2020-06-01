@@ -5,8 +5,8 @@ from behave import given, when, then, step
 
 from ray_tracer.colors import Color
 from ray_tracer.sphere import Sphere
-from ray_tracer.transformations import Scaling  # noqa
-from ray_tracer.world import World, default_world, intersect_world, shade_hit, color_at
+from ray_tracer.transformations import Scaling, Translation  # noqa
+from ray_tracer.world import World, default_world, intersect_world, shade_hit, color_at, is_shadowed
 
 @given(u'{w} = World()')
 def step_impl(context, w):
@@ -92,3 +92,24 @@ def step_impl(context, c, w, r):
     _r = getattr(context, r)
     _c = color_at(_w, _r)
     setattr(context, c, _c)
+
+
+@then(u'is_shadowed({w}, {p}) is false')
+def step_impl(context, w, p):
+    _w = getattr(context, w)
+    _p = getattr(context, p)
+    assert not is_shadowed(_w, _p)
+
+
+@then(u'is_shadowed({w}, {p}) is true')
+def step_impl(context, w, p):
+    _w = getattr(context, w)
+    _p = getattr(context, p)
+    assert is_shadowed(_w, _p)
+
+
+@given(u'{s} is added to {world}')
+def step_impl(context, s, world):
+    _s = getattr(context, s)
+    _world = getattr(context, world)
+    _world.add_object(_s)

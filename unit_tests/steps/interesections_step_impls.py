@@ -1,7 +1,7 @@
 from behave import register_type
 from parse_type import TypeBuilder
 
-from ray_tracer.intersections import Intersection, Intersections, hit, prepare_computations
+from ray_tracer.intersections import Intersection, Intersections, hit, prepare_computations, EPSILON
 from ray_tracer.rays import Ray
 
 
@@ -44,3 +44,16 @@ def step_impl(context, comps, i, r):
 
     _comps = prepare_computations(_i, _r)
     setattr(context, comps, _comps)
+
+
+@then(u'comps.over_point.z < -EPSILON/2')
+def step_impl(context):
+    _comps = getattr(context, "comps")
+    assert _comps.over_point.z < - EPSILON/2
+
+
+
+@then(u'comps.point.z > comps.over_point.z')
+def step_impl(context):
+    _comps = getattr(context, "comps")
+    assert _comps.point.z > _comps.over_point.z

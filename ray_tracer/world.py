@@ -2,6 +2,7 @@ from ray_tracer.colors import Color, BLACK
 from ray_tracer.intersections import Intersections, intersect, hit, prepare_computations
 from ray_tracer.lights import point_light
 from ray_tracer.material import lighting
+from ray_tracer.rays import Ray
 from ray_tracer.sphere import Sphere
 from ray_tracer.transformations import Scaling
 from ray_tracer.tuples import Point
@@ -24,12 +25,14 @@ class World():
         return intersections
 
     def shade_hit(self, comps):
+        shadowed = is_shadowed(self, comps.over_point)
         return lighting(
             comps.object.material,
             self.light,
             comps.point,
             comps.eyev,
-            comps.normalv)
+            comps.normalv,
+            shadowed)
 
     def color_at(self, ray):
         intersections = intersect_world(self, ray)
@@ -38,6 +41,12 @@ class World():
             return BLACK
         comps = prepare_computations(a_hit, ray)
         return shade_hit(self, comps)
+
+    def add_object(self, object_):
+        if self.objects is None:
+            self.objects = [object_]
+        else:
+            self.objects.append(object_)
 
 
 def default_world():
@@ -63,3 +72,18 @@ def shade_hit(world, comps):
 
 def color_at(world, ray):
     return world.color_at(ray)
+
+
+def is_shadowed(world, point):
+    v = world.light.position - point
+    distance = v.magnitude()
+    direction = v.normalize()
+
+    r = Ray(point, direction)
+    intersections = intersect_world(world, r)
+
+    h = hit(intersections)
+    if h is not None and h.t < distance:
+        return True
+    else:
+        return False

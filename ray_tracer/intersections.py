@@ -61,6 +61,9 @@ def intersect(sphere, ray):
     return Intersections(Intersection(t1, sphere), Intersection(t2, sphere))
 
 
+EPSILON = 1e-5
+
+
 class Computations:
     def __init__(self, intersection, ray):
         self.intersection = intersection
@@ -75,6 +78,8 @@ class Computations:
             self.normalv = - self.normalv
         else:
             self.inside = False
+        
+        self.over_point = self.point + self.normalv * EPSILON
 
     @property
     def t(self):

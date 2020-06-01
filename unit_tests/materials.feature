@@ -56,13 +56,13 @@ Scenario: Lighting with the light behind the surface
   When result = lighting(m, light, position, eyev, normalv)
   Then result == Color(0.1, 0.1, 0.1)
 
-# Scenario: Lighting with the surface in shadow
-#   Given eyev â† vector(0, 0, -1)
-#     And normalv â† vector(0, 0, -1)
-#     And light â† point_light(point(0, 0, -10), color(1, 1, 1))
-#     And in_shadow â† true
-#   When result â† lighting(m, light, position, eyev, normalv, in_shadow)
-#   Then result = color(0.1, 0.1, 0.1)
+Scenario: Lighting with the surface in shadow
+  Given eyev = Vector(0, 0, -1)
+    And normalv = Vector(0, 0, -1)
+    And light = point_light(Point(0, 0, -10), Color(1, 1, 1))
+    #And in_shadow = true
+  When result = lighting(m, light, position, eyev, normalv, True)
+  Then result == Color(0.1, 0.1, 0.1)
 
 # Scenario: Lighting with a pattern applied
 #   Given m.pattern â† stripe_pattern(color(1, 1, 1), color(0, 0, 0))

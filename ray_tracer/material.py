@@ -13,7 +13,7 @@ class Material:
     shininess: float = 200.0
 
 
-def lighting(material, light, point, eyev, normalv):
+def lighting(material, light, point, eyev, normalv, in_shadow=False):
     # combine the surface color with the light's color/intensity
     effective_color = material.color * light.intensity
 
@@ -47,6 +47,8 @@ def lighting(material, light, point, eyev, normalv):
             factor = pow(reflect_dot_eye, material.shininess)
             specular = light.intensity * material.specular * factor
 
-    # Add the three contributions together to get the final shading
+    if in_shadow:
+        return ambient
 
+    # Add the three contributions together to get the final shading
     return ambient + diffuse + specular
