@@ -1,6 +1,7 @@
 import logging
 import math
 from pathlib import Path
+import time
 
 import numpy as np
 
@@ -13,9 +14,6 @@ from ray_tracer.sphere import Sphere
 from ray_tracer.transformations import Scaling, Translation, rotation_x, rotation_y, view_transform
 from ray_tracer.tuples import Point, Vector
 from ray_tracer.world import World
-
-
-
 
 
 def floor_material():
@@ -70,7 +68,7 @@ def make_left():
 
 
 def main():
-    logging.basicConfig(level=logging.INFO, format='%(asctime)s %(levelname)s %(filename)s:%(lineno)s %(name)s %(message)s')
+    logging.basicConfig(level=logging.INFO, format='%(asctime)s %(levelname)s %(filename)s:%(lineno)s %(process)d %(name)s %(message)s')
 
     objects = (
         make_floor(),
@@ -87,7 +85,11 @@ def main():
     camera = Camera(1000, 500, math.pi/3)
     camera.transform = view_transform(Point(0, 1/5, -5), Point(0, 1, 0), Vector(0, 1, 0))
 
+    start = time.time()
     canvas = camera.render(world)
+    stop = time.time()
+
+    logging.info("Rendering took %s seconds", stop-start)
 
     path = Path(__file__).parent / "chap7.png"
     canvas_to_png(str(path), canvas)

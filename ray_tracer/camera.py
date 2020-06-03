@@ -1,7 +1,9 @@
+from functools import partial
 import logging
+from multiprocessing import Pool
 import numpy as np
 
-from ray_tracer.canvas import Canvas
+from ray_tracer.canvas import Canvas, overlay
 from ray_tracer.rays import Ray
 from ray_tracer.transformations import Transformation
 from ray_tracer.tuples import Point, normalize
@@ -38,16 +40,26 @@ class Camera:
         direction = normalize(pixel - origin)
         return Ray(origin, direction)
 
-    def render(self, world):
+    def _process_slice(self, world, y_range):
         image = Canvas(self.hsize, self.vsize)
-        for y in range(0, self.vsize - 1):
-            if y % 100 == 0:
-                logging.info("Working pixels y=%s", y)
+        for y in y_range:
+            logging.info("Working pixels y=%s", y)
             for x in range(0, self.hsize - 1):
                 ray = self.ray_for_pixel(x, y)
                 color = world.color_at(ray)
                 image.write_pixel(x, y, color)
         return image
+
+    def render(self, world):
+        num_cores = 8
+        y_range = np.arange(0, self.vsize - 1)
+        splits = np.array_split(y_range, num_cores)
+        pool = Pool(num_cores)
+        fp = partial(self._process_slice, world)
+        images = pool.map(fp, splits)
+        pool.close()
+        pool.join()
+        return overlay(*images)
 
 
 def ray_for_pixel(camera, x, y):

@@ -36,6 +36,7 @@ def get_color(a_hit, ray):
     color = lighting(a_hit.object.material, light, point, eye, normal)
     return color
 
+
 def cast_this_point(canvas_x, canvas_y, world_x, world_y):
     spot_on_wall = Point(world_x, world_y, wall_z)
     ray = Ray(ray_origin, normalize(spot_on_wall - ray_origin))
@@ -54,7 +55,6 @@ def paint():
         for x in range(canvas_pixels - 1):
             world_x = -half + pixel_size * x
             cast_this_point(x, y, world_x, world_y)
-            
 
 
 with cProfile.Profile() as pr:

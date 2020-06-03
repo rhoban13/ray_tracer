@@ -24,6 +24,16 @@ class Canvas:
         self._image[y][x] = pixel
 
 
+def overlay(*canvases):
+    '''Create a new canvas by overlaying canvasses on top of each other'''
+    output_ndarray = np.sum(canvas._image for canvas in canvases)
+    shape = output_ndarray.shape
+    assert shape[2] == 3
+    output = Canvas(shape[0], shape[1])
+    output._image = output_ndarray
+    return output
+
+
 def pixel_at(canvas, x, y):
     return canvas.pixel_at(x, y)
 
