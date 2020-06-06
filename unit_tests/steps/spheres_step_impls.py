@@ -1,9 +1,10 @@
 import math
 
-from behave import given, when, then, step
+from behave import given, when, step
 
 from ray_tracer.intersections import intersect
-from ray_tracer.sphere import Sphere, set_transform, normal_at
+from ray_tracer.shape import set_transform, normal_at
+from ray_tracer.sphere import Sphere
 from ray_tracer.transformations import Scaling, Translation, rotation_z
 from ray_tracer.tuples import Point
 

@@ -1,31 +1,28 @@
-import numpy as np
+import math
 
-from ray_tracer.material import Material
-from ray_tracer.transformations import Transformation, inverse
-from ray_tracer.tuples import Point, dot, normalize
-
-
-class Sphere:
-    def __init__(self, transform=None, material=None):    
-        self.transform = Transformation(np.eye(4))
-        self.material = Material()
-
-    def __eq__(self, other):
-        return self.transform == other.transform \
-                and self.material == other.material
-
-    def __str__(self):
-        return f"Sphere(transform={self.transform}, material={self.material})"
+from ray_tracer.intersections import Intersections, Intersection
+from ray_tracer.shape import Shape
+from ray_tracer.tuples import Point, dot
 
 
-def set_transform(sphere, transform):
-    sphere.transform = transform
+class Sphere(Shape):
 
+    def local_intersect(self, ray):
+        center = Point(0, 0, 0)
+        radius = 1
+        sphere_to_ray = ray.origin - center
+        a = dot(ray.direction, ray.direction)
+        b = 2 * dot(ray.direction, sphere_to_ray)
+        c = dot(sphere_to_ray, sphere_to_ray) - radius
+        discriminant = b**2 - 4 * a * c
 
-def normal_at(sphere, world_point):
-    inv_ = sphere.transform.inverse()
-    object_point = inv_ * world_point
-    object_normal = object_point - Point(0, 0, 0)
-    linear_component = sphere.transform.linear_component()
-    world_normal = linear_component.inverse().transpose() * object_normal
-    return normalize(world_normal)
+        if discriminant < 0:
+            return Intersections()
+
+        t1 = (-b - math.sqrt(discriminant)) / (2 * a)
+        t2 = (-b + math.sqrt(discriminant)) / (2 * a)
+        return Intersections(Intersection(t1, self), Intersection(t2, self))
+
+    def local_normal_at(self, point):
+        object_normal = point - Point(0, 0, 0)
+        return object_normal

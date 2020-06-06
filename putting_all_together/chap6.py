@@ -29,6 +29,7 @@ shape.material.color = Color(1, .2, 1)
 
 light = point_light(Point(-10, 10, -10), WHITE)
 
+
 def get_color(a_hit, ray):
     point = position(ray, a_hit.t)
     normal = normal_at(a_hit.object, point)
