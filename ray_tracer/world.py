@@ -3,6 +3,7 @@ from ray_tracer.intersections import Intersections, intersect, hit, prepare_comp
 from ray_tracer.lights import point_light
 from ray_tracer.material import lighting
 from ray_tracer.rays import Ray
+from ray_tracer.shape import set_transform
 from ray_tracer.sphere import Sphere
 from ray_tracer.transformations import Scaling
 from ray_tracer.tuples import Point
@@ -57,7 +58,7 @@ def default_world():
     s1.material.specular = .2
 
     s2 = Sphere()
-    s2.transform = Scaling(.5, .5, .5)
+    s2 = set_transform(s2, Scaling(.5, .5, .5))
 
     return World(objects=(s1, s2), light=light)
 

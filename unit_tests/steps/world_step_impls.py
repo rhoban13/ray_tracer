@@ -4,6 +4,7 @@ import re
 from behave import given, when, then, step
 
 from ray_tracer.colors import Color
+from ray_tracer.shape import set_transform
 from ray_tracer.sphere import Sphere
 from ray_tracer.transformations import Scaling, Translation  # noqa
 from ray_tracer.world import World, default_world, intersect_world, shade_hit, color_at, is_shadowed
@@ -41,7 +42,7 @@ def step_impl(context, s):
             setattr(_s.material, materialprop, value)
         elif k == 'transform':
             value = eval(v)
-            _s.transform = value
+            _s = set_transform(_s, value)
         else:
             raise NotImplementedError("Unexpected table")
     setattr(context, s, _s)
@@ -56,6 +57,8 @@ def step_impl(context, w):
 def step_impl(context, world, object_):
     _world = getattr(context, world)
     _object = getattr(context, object_)
+    print(_object)
+    print(_world.objects)
     assert _object in _world.objects
 
 

@@ -6,8 +6,15 @@ from ray_tracer.tuples import Point, dot
 
 
 class Sphere(Shape):
+    __slots__ = ()
 
-    def local_intersect(self, ray):
+    def __eq__(self, other):
+        return isinstance(other, Sphere)
+
+    def __str__(self):
+        return "Sphere()"
+
+    def intersect(self, ray):
         center = Point(0, 0, 0)
         radius = 1
         sphere_to_ray = ray.origin - center
@@ -23,6 +30,6 @@ class Sphere(Shape):
         t2 = (-b + math.sqrt(discriminant)) / (2 * a)
         return Intersections(Intersection(t1, self), Intersection(t2, self))
 
-    def local_normal_at(self, point):
+    def normal_at(self, point):
         object_normal = point - Point(0, 0, 0)
         return object_normal

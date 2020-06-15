@@ -61,7 +61,8 @@ def step_impl(context, m):
 def step_impl(context, s, m):
     _s = getattr(context, s)
     _m = getattr(context, m)
-    set_transform(_s, _m)
+    _s = set_transform(_s, _m)
+    setattr(context, s, _s)
 
 
 @when(u'{n} = normal_at({s}, Point(0, √2/2, -√2/2))')
