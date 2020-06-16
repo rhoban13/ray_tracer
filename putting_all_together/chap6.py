@@ -8,7 +8,8 @@ from ray_tracer.intersections import intersect, hit
 from ray_tracer.lights import point_light
 from ray_tracer.material import Material, lighting
 from ray_tracer.rays import Ray, position
-from ray_tracer.sphere import Sphere, normal_at
+from ray_tracer.shape import normal_at
+from ray_tracer.sphere import Sphere
 from ray_tracer.tuples import Point, normalize
 
 

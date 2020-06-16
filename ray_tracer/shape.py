@@ -9,10 +9,7 @@ from ray_tracer.tuples import normalize
 
 
 class Shape(ABC):
-    __slots__ = ("material")
-
-    def __init__(self, material=None):
-        self.material = Material()
+    __slots__ = ()
 
     @abstractmethod
     def intersect(self, ray):
@@ -21,6 +18,13 @@ class Shape(ABC):
     @abstractmethod
     def normal_at(self, world_point):
         pass
+
+
+class ShapeWithMaterial(Shape):
+    __slots__ = ("material")
+
+    def __init__(self, material=None):
+        self.material = Material()
 
 
 class InvalidInnerShape(Exception):
@@ -44,6 +48,10 @@ class TransformedShape(Shape):
     def material(self):  # Not sure this should be here
         return self.inner.material
 
+    @material.setter
+    def material(self, value):
+        self.inner.material = value
+
     def __eq__(self, other):
         return self.inner.material == other.material and \
                 self.inner.__eq__(other.inner) and \
@@ -64,6 +72,7 @@ class TransformedShape(Shape):
 
 
 def set_transform(shape, transform):
+    '''This would probably be better named apply_TransformedShape_decorator'''
     return TransformedShape(shape, transform)
 
 

@@ -1,10 +1,10 @@
 from behave import given
 
-from ray_tracer.shape import Shape
+from ray_tracer.shape import ShapeWithMaterial
 from ray_tracer.tuples import Vector
 
 
-class TestShape(Shape):
+class TestShape(ShapeWithMaterial):
     def __init__(self):
         super().__init__()
         self.saved_ray = None

@@ -53,15 +53,16 @@ class Camera:
     def render(self, world):
         num_cores = 1 #8
         y_range = np.arange(0, self.vsize - 1)
-        splits = np.array_split(y_range, num_cores)
-        
+        # splits = np.array_split(y_range, num_cores)
+
         fp = partial(self._process_slice, world)
+        return fp(y_range)
         # pool = Pool(num_cores)
         # images = pool.map(fp, splits)
         # pool.close()
         # pool.join()
-        images = map(fp, splits)
-        return overlay(*images)
+        #images = map(fp, splits)
+        #return overlay(*images)
 
 
 def ray_for_pixel(camera, x, y):

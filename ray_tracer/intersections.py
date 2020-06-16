@@ -22,6 +22,9 @@ class Intersections:
     def __getitem__(self, index):
         return self._list_of_t[index]
 
+    #def __bool__(self):
+    #    return bool(self._list_of_t)
+
     @property
     def count(self):
         return len(self._list_of_t)
@@ -38,10 +41,6 @@ def hit(intersections):
 
 
 def intersect(shape, ray):
-    '''
-    This is solution to ||(ray.origin + t * ray.direction) - sphere.center|| == sphere.radius
-    Strong assumption now that sphere = Sphere()
-    '''
     return shape.intersect(ray)
 
 

@@ -44,6 +44,7 @@ def lighting(material, light, point, eyev, normalv, in_shadow=False):
             specular = BLACK
         else:
             # compute the specular contribution
+            print(f"{reflect_dot_eye=}")
             factor = pow(reflect_dot_eye, material.shininess)
             specular = light.intensity * material.specular * factor
 
