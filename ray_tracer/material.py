@@ -1,6 +1,7 @@
 from dataclasses import dataclass
 
 from ray_tracer.colors import Color, BLACK
+from ray_tracer.patterns import Pattern, stripe_at
 from ray_tracer.tuples import normalize, dot, reflect
 
 
@@ -9,13 +10,20 @@ class Material:
     color: Color = Color(1, 1, 1)
     ambient: float = .1
     diffuse: float = .9
+    pattern: Pattern = None
     specular: float = .9
     shininess: float = 200.0
 
 
 def lighting(material, light, point, eyev, normalv, in_shadow=False):
+
+    if material.pattern is not None:
+        color = stripe_at(material.pattern, point)
+    else:
+        color = material.color
+
     # combine the surface color with the light's color/intensity
-    effective_color = material.color * light.intensity
+    effective_color = color * light.intensity
 
     # find the direction to the light source
     lightv = normalize(light.position - point)

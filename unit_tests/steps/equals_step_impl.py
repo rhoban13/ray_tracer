@@ -6,6 +6,7 @@ import numpy as np
 from ray_tracer.canvas import pixel_at
 from ray_tracer.colors import Color
 from ray_tracer.material import Material
+from ray_tracer.patterns import stripe_at
 from ray_tracer.rays import position
 from ray_tracer.transformations import Transformation, Scaling, Translation
 from ray_tracer.tuples import Point, R4Vector, Vector, normalize, magnitude, dot, cross

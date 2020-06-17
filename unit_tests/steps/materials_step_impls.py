@@ -2,6 +2,7 @@ from behave import register_type, given, when
 from parse_type import TypeBuilder
 
 from ray_tracer.material import Material, lighting
+from ray_tracer.tuples import Point
 
 
 @given(u'{m} = Material()')
@@ -10,10 +11,16 @@ def step_impl(context, m):
     setattr(context, m, _m)
 
 
-    
-
 parse_bool = TypeBuilder.make_enum({"True": True, "False": False})
 register_type(BoolType=parse_bool)
+
+
+
+@when(u'{result} = lighting({material}, {light}, Point({x:g},{y:g},{z:g}), {eyev}, {normalv}, {in_shadow:BoolType})')
+def step_impl(context, result, material, light, x, y, z, eyev, normalv, in_shadow):
+    _position = Point(x, y, z)
+    setattr(context, "position", _position)
+    context.execute_steps(f"when {result} = lighting({material}, {light}, position, {eyev}, {normalv}, {in_shadow})")
 
 
 @when(u'{result} = lighting({material}, {light}, {position}, {eyev}, {normalv}, {in_shadow:BoolType})')

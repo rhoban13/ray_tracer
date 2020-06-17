@@ -64,15 +64,15 @@ Scenario: Lighting with the surface in shadow
   When result = lighting(m, light, position, eyev, normalv, True)
   Then result == Color(0.1, 0.1, 0.1)
 
-# Scenario: Lighting with a pattern applied
-#   Given m.pattern â† stripe_pattern(color(1, 1, 1), color(0, 0, 0))
-#     And m.ambient â† 1
-#     And m.diffuse â† 0
-#     And m.specular â† 0
-#     And eyev â† vector(0, 0, -1)
-#     And normalv â† vector(0, 0, -1)
-#     And light â† point_light(point(0, 0, -10), color(1, 1, 1))
-#   When c1 â† lighting(m, light, point(0.9, 0, 0), eyev, normalv, false)
-#     And c2 â† lighting(m, light, point(1.1, 0, 0), eyev, normalv, false)
-#   Then c1 = color(1, 1, 1)
-#     And c2 = color(0, 0, 0)
+Scenario: Lighting with a pattern applied
+  Given m.pattern = stripe_pattern(Color(1, 1, 1), Color(0, 0, 0))
+    And m.ambient = 1
+    And m.diffuse = 0
+    And m.specular = 0
+    And eyev = Vector(0, 0, -1)
+    And normalv = Vector(0, 0, -1)
+    And light = point_light(Point(0, 0, -10), Color(1, 1, 1))
+  When c1 = lighting(m, light, Point(0.9, 0, 0), eyev, normalv, False)
+    And c2 = lighting(m, light, Point(1.1, 0, 0), eyev, normalv, False)
+  Then c1 == Color(1, 1, 1)
+    And c2 == Color(0, 0, 0)
