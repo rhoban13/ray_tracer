@@ -4,8 +4,8 @@ from ray_tracer.material import lighting
 from ray_tracer.rays import Ray
 
 
-class World():
-    __slots__ = ('objects', 'light')
+class World:
+    __slots__ = ("objects", "light")
 
     def __init__(self, objects=None, light=None):
         self.objects = objects
@@ -28,7 +28,8 @@ class World():
             comps.point,
             comps.eyev,
             comps.normalv,
-            shadowed)
+            shadowed,
+        )
 
     def color_at(self, ray):
         intersections = self.intersect_world(ray)
