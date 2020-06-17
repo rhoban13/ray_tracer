@@ -3,6 +3,7 @@ import math
 from pathlib import Path
 import time
 
+
 from ray_tracer.canvas import canvas_to_png
 from ray_tracer.camera import Camera
 from ray_tracer.colors import Color
@@ -29,8 +30,8 @@ def make_floor():
 
 
 def make_wall(theta):
-    trans = Translation(0, 0, 5) * rotation_y(theta) * rotation_x(math.pi/2) * Scaling(10, .01, 10)
-    wall = set_transform(Sphere(), trans)
+    transform = Translation(0, 0, 5) * rotation_y(theta) * rotation_x(math.pi/2) * Scaling(10, .01, 10)
+    wall = set_transform(Sphere(), transform)
     wall.material = floor_material()
     return wall
 
@@ -54,8 +55,7 @@ def make_right():
 
 
 def make_left():
-    transform = Translation(-1.5, 0.33, -0.75) * Scaling(0.33, 0.33, 0.33)
-    left = set_transform(Sphere(), transform)
+    left = set_transform(Sphere(), Translation(-1.5, 0.33, -0.75) * Scaling(0.33, 0.33, 0.33))
     left.material = Material()
     left.material.color = Color(1, 0.8, 0.1)
     left.material.diffuse = 0.7
@@ -77,9 +77,8 @@ def main():
 
     light = point_light(Point(-10, 10, -10), Color(1, 1, 1))
     world = World(objects=objects, light=light)
-
-    #camera = Camera(1000, 500, math.pi/3)
-    camera = Camera(500, 250, math.pi/3)
+    camera = Camera(1000, 500, math.pi/3)
+    #camera = Camera(100, 50, math.pi/3)
     camera.transform = view_transform(Point(0, 1/5, -5), Point(0, 1, 0), Vector(0, 1, 0))
 
     start = time.time()

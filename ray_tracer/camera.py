@@ -1,7 +1,8 @@
 from functools import partial
 import logging
-from multiprocessing import Pool
+from multiprocessing import get_context, log_to_stderr
 import numpy as np
+import os
 
 from ray_tracer.canvas import Canvas, overlay
 from ray_tracer.rays import Ray
@@ -27,6 +28,8 @@ class Camera:
 
         self.pixel_size = (self.half_width * 2) / hsize
 
+        self.logger = None
+
     def ray_for_pixel(self, x, y):
         xoffset = (x + .5) * self.pixel_size
         yoffset = (y + .5) * self.pixel_size
@@ -43,26 +46,34 @@ class Camera:
     def _process_slice(self, world, y_range):
         image = Canvas(self.hsize, self.vsize)
         for y in y_range:
-            logging.info("Working pixels y=%s", y)
+            self.logger.info("Working pixels y=%s", y)
             for x in range(0, self.hsize - 1):
                 ray = self.ray_for_pixel(x, y)
                 color = world.color_at(ray)
                 image.write_pixel(x, y, color)
         return image
 
-    def render(self, world):
-        num_cores = 1 #8
-        y_range = np.arange(0, self.vsize - 1)
-        # splits = np.array_split(y_range, num_cores)
+    def _render_multiprocess(self, world):
+        self.logger = log_to_stderr()
+        self.logger.setLevel(logging.INFO)
 
-        fp = partial(self._process_slice, world)
-        return fp(y_range)
-        # pool = Pool(num_cores)
-        # images = pool.map(fp, splits)
-        # pool.close()
-        # pool.join()
-        #images = map(fp, splits)
-        #return overlay(*images)
+        num_cores = os.cpu_count()
+        y_range = np.arange(0, self.vsize - 1)
+        splits = np.array_split(y_range, num_cores)
+        with get_context("spawn").Pool() as pool:
+            fp = partial(self._process_slice, world)
+            images = pool.map(fp, splits)
+        return overlay(*images)
+
+    def _render_single_process(self, world):
+        self.logger = logging.getLogger(__name__)
+        y_range = np.arange(0, self.vsize - 1)
+        image = self._process_slice(world, y_range)
+        return image
+
+    def render(self, world):
+        return self._render_multiprocess(world)
+        #return self._render_single_process(world)
 
 
 def ray_for_pixel(camera, x, y):

@@ -1,11 +1,11 @@
 import math
 
 from ray_tracer.intersections import Intersections, Intersection
-from ray_tracer.shape import ShapeWithMaterial
+from ray_tracer.shape import Shape
 from ray_tracer.tuples import Point, dot
 
 
-class Sphere(ShapeWithMaterial):
+class Sphere(Shape):
     __slots__ = ()
 
     def __eq__(self, other):

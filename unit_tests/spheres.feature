@@ -64,6 +64,8 @@ Scenario: Intersecting a scaled sphere with a ray
   Then xs.count == 2
     And xs[0].t == 3
     And xs[1].t == 7
+    And xs[0].object == s
+    And xs[1].object == s
 
 Scenario: Intersecting a translated sphere with a ray
   Given r = Ray(Point(0, 0, -5), Vector(0, 0, 1))

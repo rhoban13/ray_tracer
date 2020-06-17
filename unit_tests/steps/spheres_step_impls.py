@@ -3,7 +3,7 @@ import math
 from behave import given, when, step
 
 from ray_tracer.intersections import intersect
-from ray_tracer.shape import set_transform, normal_at
+from ray_tracer.shape import set_transform
 from ray_tracer.sphere import Sphere
 from ray_tracer.transformations import Scaling, Translation, rotation_z
 from ray_tracer.tuples import Point
@@ -41,7 +41,7 @@ def step_impl(context, sphere, dx, dy, dz):
 def step_impl(context, n, s, x, y, z):
     _s = getattr(context, s)
     _p = Point(x, y, z)
-    _n = normal_at(_s, _p)
+    _n = _s.normal_at(_p)
     setattr(context, n, _n)
 
 
@@ -63,7 +63,6 @@ def step_impl(context, s, m):
     _m = getattr(context, m)
     _s = set_transform(_s, _m)
     setattr(context, s, _s)
-
 
 @when(u'{n} = normal_at({s}, Point(0, √2/2, -√2/2))')
 def step_impl(context, n, s):

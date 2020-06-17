@@ -1,16 +1,17 @@
 from abc import ABC, abstractmethod
 
-import numpy as np
-
+from ray_tracer.intersections import Intersections, Intersection
 from ray_tracer.material import Material
 from ray_tracer.rays import transform
-from ray_tracer.transformations import Transformation
 from ray_tracer.tuples import normalize
 
 
 class Shape(ABC):
-    __slots__ = ()
+    __slots__ = ("material")
 
+    def __init__(self, material=None):
+        self.material = Material()
+    
     @abstractmethod
     def intersect(self, ray):
         pass
@@ -18,13 +19,6 @@ class Shape(ABC):
     @abstractmethod
     def normal_at(self, world_point):
         pass
-
-
-class ShapeWithMaterial(Shape):
-    __slots__ = ("material")
-
-    def __init__(self, material=None):
-        self.material = Material()
 
 
 class InvalidInnerShape(Exception):
@@ -42,7 +36,7 @@ class TransformedShape(Shape):
         self.inner = shape
 
     def __str__(self):
-        return f"TransformedShape(transform={self.transform}, inner={self.inner})"
+        return f"TransformedShape(transform={self.transform},\n inner={self.inner},\n material={self.material})"
 
     @property
     def material(self):  # Not sure this should be here
@@ -59,7 +53,8 @@ class TransformedShape(Shape):
 
     def intersect(self, ray):
         local_ray = transform(ray, self.transform.inverse())
-        return self.inner.intersect(local_ray)
+        inner_intersections = self.inner.intersect(local_ray)
+        return Intersections(*(Intersection(i.t, self) for i in inner_intersections))
 
     def normal_at(self, world_point):
         inv_ = self.transform.inverse()
@@ -72,7 +67,6 @@ class TransformedShape(Shape):
 
 
 def set_transform(shape, transform):
-    '''This would probably be better named apply_TransformedShape_decorator'''
     return TransformedShape(shape, transform)
 
 

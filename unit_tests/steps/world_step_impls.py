@@ -4,10 +4,14 @@ import re
 from behave import given, when, then, step
 
 from ray_tracer.colors import Color
+from ray_tracer.lights import point_light
 from ray_tracer.shape import set_transform
 from ray_tracer.sphere import Sphere
 from ray_tracer.transformations import Scaling, Translation  # noqa
-from ray_tracer.world import World, default_world, intersect_world, shade_hit, color_at, is_shadowed
+from ray_tracer.tuples import Point
+from ray_tracer.world import World, intersect_world, shade_hit, color_at, is_shadowed
+
+
 
 @given(u'{w} = World()')
 def step_impl(context, w):
@@ -48,8 +52,20 @@ def step_impl(context, s):
     setattr(context, s, _s)
 
 
+def default_world():
+    light = point_light(Point(-10, 10, -10), Color(1, 1, 1))
+    s1 = Sphere()
+    s1.material.color = Color(.8, 1.0, .6)
+    s1.material.diffuse = .7
+    s1.material.specular = .2
+
+    s2 = set_transform(Sphere(), Scaling(.5, .5, .5))
+
+    return World(objects=(s1, s2), light=light)
+
 @step(u'{w} = default_world()')
 def step_impl(context, w):
+    
     setattr(context, w, default_world())
 
 
