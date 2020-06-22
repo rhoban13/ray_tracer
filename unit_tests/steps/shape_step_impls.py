@@ -1,11 +1,12 @@
 from behave import given
 
 from ray_tracer.intersections import Intersections, Intersection
-from ray_tracer.shape import Shape
+from ray_tracer.shape import Shape, TransformedShape
+from ray_tracer.transformations import Identity
 from ray_tracer.tuples import Vector
 
 
-class TestShape(Shape):
+class ConcreteTestShape(Shape):
     __slots__ = ("saved_ray")
 
     def __init__(self):
@@ -18,10 +19,12 @@ class TestShape(Shape):
         # I added this to check a mistake I made.  This'll help ensure that the intersection.object is correct
         return Intersections(Intersection(5, self))
 
-
     def normal_at(self, point):
         return Vector(point.x, point.y, point.z)
 
+
+def TestShape():
+    return TransformedShape(ConcreteTestShape(), Identity())
 
 def test_shape():
     return TestShape()

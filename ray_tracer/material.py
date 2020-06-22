@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 
 from ray_tracer.colors import Color, BLACK
-from ray_tracer.patterns import Pattern, stripe_at
+from ray_tracer.patterns import Pattern, pattern_at_shape
 from ray_tracer.tuples import normalize, dot, reflect
 
 
@@ -15,10 +15,10 @@ class Material:
     shininess: float = 200.0
 
 
-def lighting(material, light, point, eyev, normalv, in_shadow=False):
+def lighting(material, object_, light, point, eyev, normalv, in_shadow=False):
 
     if material.pattern is not None:
-        color = stripe_at(material.pattern, point)
+        color = pattern_at_shape(material.pattern, object_, point)
     else:
         color = material.color
 

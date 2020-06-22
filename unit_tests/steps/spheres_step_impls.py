@@ -23,7 +23,7 @@ def step_impl(context, xs, s, r):
     setattr(context, xs, _xs)
 
 
-@when(u'set_transform({sphere}, Scaling({dx:g}, {dy:g}, {dz:g}))')
+@step(u'set_transform({sphere}, Scaling({dx:g}, {dy:g}, {dz:g}))')
 def step_impl(context, sphere, dx, dy, dz):
     _transform = Scaling(dx, dy, dz)
     setattr(context, "transform", _transform)

@@ -1,15 +1,16 @@
 import math
 
 from ray_tracer.intersections import Intersections, Intersection
-from ray_tracer.shape import Shape
+from ray_tracer.shape import Shape, TransformedShape
+from ray_tracer.transformations import Identity
 from ray_tracer.tuples import Point, dot
 
 
-class Sphere(Shape):
+class UnitSphere(Shape):
     __slots__ = ()
 
     def __eq__(self, other):
-        return isinstance(other, Sphere)
+        return isinstance(other, self.__class__)
 
     def __str__(self):
         return "Sphere()"
@@ -33,3 +34,7 @@ class Sphere(Shape):
     def normal_at(self, point):
         object_normal = point - Point(0, 0, 0)
         return object_normal
+
+
+def Sphere():
+    return TransformedShape(UnitSphere(), Identity())

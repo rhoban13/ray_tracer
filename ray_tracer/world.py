@@ -24,6 +24,7 @@ class World:
         shadowed = is_shadowed(self, comps.over_point)
         return lighting(
             comps.object.material,
+            comps.object,
             self.light,
             comps.point,
             comps.eyev,

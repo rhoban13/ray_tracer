@@ -16,28 +16,26 @@ register_type(BoolType=parse_bool)
 
 
 
-@when(u'{result} = lighting({material}, {light}, Point({x:g},{y:g},{z:g}), {eyev}, {normalv}, {in_shadow:BoolType})')
-def step_impl(context, result, material, light, x, y, z, eyev, normalv, in_shadow):
+@when(u'{result} = lighting({material}, {object_}, {light}, Point({x:g},{y:g},{z:g}), {eyev}, {normalv}, {in_shadow:BoolType})')
+def step_impl(context, result, material, object_, light, x, y, z, eyev, normalv, in_shadow):
     _position = Point(x, y, z)
     setattr(context, "position", _position)
-    context.execute_steps(f"when {result} = lighting({material}, {light}, position, {eyev}, {normalv}, {in_shadow})")
+    context.execute_steps(f"when {result} = lighting({material}, {object_}, {light}, position, {eyev}, {normalv}, {in_shadow})")
 
 
-@when(u'{result} = lighting({material}, {light}, {position}, {eyev}, {normalv}, {in_shadow:BoolType})')
-def step_impl(context, result, material, light, position, eyev, normalv, in_shadow):
+@when(u'{result} = lighting({material}, {object_}, {light}, {position}, {eyev}, {normalv}, {in_shadow:BoolType})')
+def step_impl(context, result, material, object_, light, position, eyev, normalv, in_shadow):
     _material = getattr(context, material)
+    _object = getattr(context, object_)
     _light = getattr(context, light)
     _position = getattr(context, position)
     _eyev = getattr(context, eyev)
     _normalv = getattr(context, normalv)
 
-    _result = lighting(_material, _light, _position, _eyev, _normalv, in_shadow)
+    _result = lighting(_material, _object, _light, _position, _eyev, _normalv, in_shadow)
     setattr(context, result, _result)
 
 
-@when(u'{result} = lighting({material}, {light}, {position}, {eyev}, {normalv})')
-def step_impl(context, result, material, light, position, eyev, normalv):
-    context.execute_steps(f"when {result} = lighting({material}, {light}, {position}, {eyev}, {normalv}, False)")
-
-
-
+@when(u'{result} = lighting({material}, {object_}, {light}, {position}, {eyev}, {normalv})')
+def step_impl(context, result, material, object_, light, position, eyev, normalv):
+    context.execute_steps(f"when {result} = lighting({material}, {object_}, {light}, {position}, {eyev}, {normalv}, False)")

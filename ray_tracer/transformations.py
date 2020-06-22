@@ -73,6 +73,11 @@ class Transformation:
         return self.ndarray[indexes_tuple]
 
 
+class Identity(Transformation):
+    def __init__(self):
+        super().__init__(np.eye(4))
+
+
 class Translation(Transformation):
     def __init__(self, x, y, z):
         super().__init__([

@@ -11,7 +11,7 @@ class Shape(ABC):
 
     def __init__(self, material=None):
         self.material = Material()
-    
+
     @abstractmethod
     def intersect(self, ray):
         pass
@@ -30,8 +30,7 @@ class TransformedShape(Shape):
 
     '''A decorator applying a transformation to a concrete class'''
     def __init__(self, shape, transform):
-        if isinstance(shape, TransformedShape):
-            raise InvalidInnerShape("Only able to decorate a concrete shape with a single transform")
+        #super().__init__()
         self.transform = transform
         self.inner = shape
 
@@ -67,7 +66,8 @@ class TransformedShape(Shape):
 
 
 def set_transform(shape, transform):
-    return TransformedShape(shape, transform)
+    shape.transform = transform
+    return shape
 
 
 def normal_at(shape, world_point):
