@@ -145,6 +145,9 @@ class _Vector:
         assert isinstance(scalar, Number)
         return _Vector(scalar * self.ndarray)
 
+    def __rmul__(self, scalar: Number):
+        return self.__mul__(scalar)
+
     def __str__(self):
         return f"_Vector({round(self.x, 5)}, {round(self.y, 5)}, {round(self.z, 5)})"
 

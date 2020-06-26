@@ -3,6 +3,7 @@ from abc import ABC, abstractmethod
 from ray_tracer.intersections import Intersections, Intersection
 from ray_tracer.material import Material
 from ray_tracer.rays import transform
+from ray_tracer.transformations import Identity
 from ray_tracer.tuples import normalize
 
 
@@ -29,9 +30,9 @@ class TransformedShape(Shape):
     __slots__ = ("transform", "inner")
 
     '''A decorator applying a transformation to a concrete class'''
-    def __init__(self, shape, transform):
-        #super().__init__()
-        self.transform = transform
+    def __init__(self, shape, transform=None):
+        # super().__init__()
+        self.transform = transform if transform else Identity()
         self.inner = shape
 
     def __str__(self):

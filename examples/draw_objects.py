@@ -1,0 +1,27 @@
+import logging
+import math
+from pathlib import Path
+
+from ray_tracer.canvas import canvas_to_png
+from ray_tracer.camera import Camera
+from ray_tracer.colors import Color
+from ray_tracer.lights import point_light
+from ray_tracer.transformations import view_transform
+from ray_tracer.tuples import Point, Vector
+from ray_tracer.world import World
+
+
+def draw_objects(objects):
+    logging.basicConfig(level=logging.INFO, format='%(asctime)s %(levelname)s %(filename)s:%(lineno)s %(name)s %(message)s')
+
+    light = point_light(Point(10, 10, 15), Color(1, 1, 1))
+    world = World(objects=objects, light=light)
+
+    camera = Camera(100, 50, math.pi/3)
+    #camera.transform = view_transform(Point(-5, 5, -5), Point(0, 0, 0), Vector(0, 0, 1))
+    camera.transform = view_transform(Point(12, -2, 6), Point(0, 0, 0), Vector(0, 0, 1))
+
+    canvas = camera.render(world)
+
+    path = Path(__file__).parent / "output.png"
+    canvas_to_png(str(path), canvas)
