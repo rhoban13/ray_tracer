@@ -1,5 +1,5 @@
 # Examples
 
-![](examples/first.gif)
-![](examples/crooked_plane)
-![](examples/gradient.gif)
+![](first.gif)
+![](crooked_plane.gif)
+![](gradient.gif)
