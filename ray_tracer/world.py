@@ -1,7 +1,12 @@
 from ray_tracer.colors import BLACK
 from ray_tracer.intersections import Intersections, hit, prepare_computations
+from ray_tracer.lights import Light
 from ray_tracer.material import lighting
 from ray_tracer.rays import Ray
+
+
+class UnexectedLightType(RuntimeError):
+    pass
 
 
 class World:
@@ -21,16 +26,32 @@ class World:
         return intersections
 
     def shade_hit(self, comps):
-        shadowed = is_shadowed(self, comps.over_point)
-        return lighting(
-            comps.object.material,
-            comps.object,
-            self.light,
-            comps.point,
-            comps.eyev,
-            comps.normalv,
-            shadowed,
-        )
+        if isinstance(self.light, Light):
+            shadowed = is_shadowed(self, comps.over_point)
+            return lighting(
+                comps.object.material,
+                comps.object,
+                self.light,
+                comps.point,
+                comps.eyev,
+                comps.normalv,
+                shadowed,
+            )
+        assert isinstance(self.light, list), f"light is {self.light}"
+        output = BLACK
+        for light in self.light:
+            shadowed = is_shadowed(self, comps.over_point, light)
+            output += lighting(
+                    comps.object.material,
+                    comps.object,
+                    light,
+                    comps.point,
+                    comps.eyev,
+                    comps.normalv,
+                    shadowed,
+            )
+        return output
+   
 
     def color_at(self, ray):
         intersections = self.intersect_world(ray)
@@ -59,8 +80,10 @@ def color_at(world, ray):
     return world.color_at(ray)
 
 
-def is_shadowed(world, point):
-    v = world.light.position - point
+def is_shadowed(world, point, light=None):
+    if light is None:  # This is pretty inefficient.  It recomputes intersections below for each light
+        light = world.light
+    v = light.position - point
     distance = v.magnitude()
     direction = v.normalize()
 

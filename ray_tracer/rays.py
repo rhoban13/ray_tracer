@@ -6,9 +6,12 @@ class Ray:
     origin: Point
     direction: Vector
 
+    def position(self, t):
+        return self.origin + t * self.direction
+
 
 def position(ray, t):
-    return ray.origin + ray.direction * t
+    return ray.position(t)
 
 
 def transform(ray, matrix):

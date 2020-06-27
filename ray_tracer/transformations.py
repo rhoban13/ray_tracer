@@ -198,3 +198,13 @@ def view_transform(from_, to, up):
     )))
     translation = Translation(-from_.x, -from_.y, -from_.z)
     return orientation * translation
+
+
+class ReflectionXZ(Transformation):
+    def __init__(self):
+        super().__init__([
+            [1, 0, 0, 0],
+            [0, -1, 0, 0],
+            [0, 0, 1, 0],
+            [0, 0, 0, 1]
+        ])
