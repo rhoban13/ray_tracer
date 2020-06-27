@@ -32,7 +32,7 @@ def make_single_frame(objects, view_transform_):
 def main():
     logging.basicConfig(level=logging.INFO, format='%(asctime)s %(levelname)s %(filename)s:%(lineno)s %(name)s %(message)s')
 
-    shape = ClippedShape( crooked_plane()
+    shape = ClippedShape(crooked_plane())
     shape.material = Material()
     shape.material.color = Color(1, .2, 1)
     shape.material.pattern = gradient_pattern(BLUE, GREEN)

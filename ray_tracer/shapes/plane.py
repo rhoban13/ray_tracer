@@ -1,8 +1,10 @@
 from ray_tracer.intersections import EPSILON, Intersections, Intersection
 from ray_tracer.rays import Ray
-from ray_tracer.shape import Shape, TransformedShape
 from ray_tracer.transformations import Identity
 from ray_tracer.tuples import Vector
+
+from .shape import Shape
+from .transformed_shape import TransformedShape
 
 
 class XZPlane(Shape):

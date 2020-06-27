@@ -1,5 +1,6 @@
 from ray_tracer.intersections import Intersection, Intersections
-from ray_tracer.shape import Shape
+
+from .shape import Shape
 
 
 class ClippedShape(Shape):
@@ -19,7 +20,7 @@ class ClippedShape(Shape):
 
     def intersect(self, ray):
         inner_intersections = self.inner.intersect(ray)
-        output = None
+        output = []
         for xs in inner_intersections:
             if self._in_bounding_box(ray.position(xs.t)):
                 output.append(Intersection(xs.t, self))

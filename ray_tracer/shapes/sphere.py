@@ -1,9 +1,11 @@
 import math
 
 from ray_tracer.intersections import Intersections, Intersection
-from ray_tracer.shape import Shape, TransformedShape
 from ray_tracer.transformations import Identity
 from ray_tracer.tuples import Point, dot
+
+from .shape import Shape
+from .transformed_shape import TransformedShape
 
 
 class UnitSphere(Shape):

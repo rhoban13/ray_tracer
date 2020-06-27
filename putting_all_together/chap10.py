@@ -1,3 +1,4 @@
+import argparse
 import logging
 import math
 from pathlib import Path
@@ -8,9 +9,7 @@ from ray_tracer.colors import Color, RED, GREEN, BLUE, WHITE, BLACK
 from ray_tracer.lights import point_light
 from ray_tracer.material import Material
 from ray_tracer.patterns import stripe_pattern, ring_pattern, checkers_pattern, gradient_pattern
-from ray_tracer.plane import Plane
-from ray_tracer.shape import set_transform
-from ray_tracer.sphere import Sphere
+from ray_tracer.shapes import set_transform, Sphere, Plane
 from ray_tracer.transformations import Scaling, Translation, view_transform, rotation_x, rotation_z
 from ray_tracer.tuples import Point, Vector
 from ray_tracer.world import World
@@ -64,7 +63,7 @@ def make_left():
     return left
 
 
-def main():
+def main(camera_resolution):
     logging.basicConfig(level=logging.INFO, format='%(asctime)s %(levelname)s %(filename)s:%(lineno)s %(name)s %(message)s')
 
     objects = (
@@ -77,10 +76,8 @@ def main():
     light = point_light(Point(-10, 10, -10), Color(1, 1, 1))
     world = World(objects=objects, light=light)
 
-    camera = Camera(1000, 500, math.pi/3)
-    #camera = Camera(100, 50, math.pi/3)
+    camera = Camera(*camera_resolution, math.pi/3)
     camera.transform = view_transform(Point(0, 1/5, -5), Point(0, 1, 0), Vector(0, 1, 0))
-
     canvas = camera.render(world)
 
     path = Path(__file__).parent / "chap10.png"
@@ -88,4 +85,8 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    resolutions = {'low': (100, 50), 'high': (1000, 500)}
+    parser = argparse.ArgumentParser()
+    parser.add_argument('resolution', choices=resolutions.keys())
+    args = parser.parse_args()
+    main(resolutions[args.resolution])

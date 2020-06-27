@@ -1,7 +1,7 @@
 from behave import given
 
 from ray_tracer.intersections import Intersections, Intersection
-from ray_tracer.shape import Shape, TransformedShape
+from ray_tracer.shapes import Shape, TransformedShape
 from ray_tracer.transformations import Identity
 from ray_tracer.tuples import Vector
 

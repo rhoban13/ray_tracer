@@ -5,8 +5,7 @@ from behave import given, when, then, step
 
 from ray_tracer.colors import Color
 from ray_tracer.lights import point_light
-from ray_tracer.shape import set_transform
-from ray_tracer.sphere import Sphere
+from ray_tracer.shapes import set_transform, Sphere
 from ray_tracer.transformations import Scaling, Translation  # noqa
 from ray_tracer.tuples import Point
 from ray_tracer.world import World, intersect_world, shade_hit, color_at, is_shadowed

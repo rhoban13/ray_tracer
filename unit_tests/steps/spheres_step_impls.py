@@ -3,8 +3,7 @@ import math
 from behave import given, when, step
 
 from ray_tracer.intersections import intersect
-from ray_tracer.shape import set_transform
-from ray_tracer.sphere import Sphere
+from ray_tracer.shapes import set_transform, Sphere
 from ray_tracer.transformations import Scaling, Translation, rotation_z
 from ray_tracer.tuples import Point
 

@@ -1,6 +1,6 @@
 from behave import given, then
 
-from ray_tracer.plane import Plane
+from ray_tracer.shapes import Plane
 
 
 @given(u'{p} = Plane()')

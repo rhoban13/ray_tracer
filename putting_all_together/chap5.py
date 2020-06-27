@@ -1,15 +1,18 @@
 from pathlib import Path
 
-from ray_tracer import Point, Sphere, RED, Ray, normalize, intersect, hit
 from ray_tracer.canvas import Canvas, write_pixel, canvas_to_png
+from ray_tracer.colors import RED
+from ray_tracer.intersections import intersect, hit
+from ray_tracer.rays import Ray
+from ray_tracer.shapes import Sphere
+from ray_tracer.tuples import Point, normalize
 
 ray_origin = Point(0, 0, -5)
-
 
 wall_z = 10
 wall_size = 7
 canvas_pixels = 100
-pixel_size = wall_size /canvas_pixels
+pixel_size = wall_size / canvas_pixels
 half = wall_size / 2
 
 

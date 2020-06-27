@@ -1,3 +1,4 @@
+import argparse
 import logging
 import math
 from pathlib import Path
@@ -7,9 +8,7 @@ from ray_tracer.camera import Camera
 from ray_tracer.colors import Color
 from ray_tracer.lights import point_light
 from ray_tracer.material import Material
-from ray_tracer.plane import Plane
-from ray_tracer.shape import set_transform
-from ray_tracer.sphere import Sphere
+from ray_tracer.shapes import set_transform, Sphere, Plane
 from ray_tracer.transformations import Scaling, Translation, view_transform
 from ray_tracer.tuples import Point, Vector
 from ray_tracer.world import World
@@ -56,7 +55,7 @@ def make_left():
     return left
 
 
-def main():
+def main(canvas_dimensions):
     logging.basicConfig(level=logging.INFO, format='%(asctime)s %(levelname)s %(filename)s:%(lineno)s %(name)s %(message)s')
 
     objects = (
@@ -69,7 +68,7 @@ def main():
     light = point_light(Point(-10, 10, -10), Color(1, 1, 1))
     world = World(objects=objects, light=light)
 
-    camera = Camera(1000, 500, math.pi/3)
+    camera = Camera(*canvas_dimensions, math.pi/3)
     camera.transform = view_transform(Point(0, 1/5, -5), Point(0, 1, 0), Vector(0, 1, 0))
 
     canvas = camera.render(world)
@@ -79,4 +78,8 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    resolutions = {'low': (100, 50), 'high': (1000, 500)}
+    parser = argparse.ArgumentParser()
+    parser.add_argument('resolution', choices=resolutions.keys())
+    args = parser.parse_args()
+    main(resolutions[args.resolution])
