@@ -1,7 +1,6 @@
 from numbers import Number
 import numpy as np
 
-from typing import Any
 
 class _R4Vector:
     def __init__(self, ndarray):
@@ -22,7 +21,7 @@ class _R4Vector:
     @property
     def w(self):
         return self.ndarray[3]
- 
+
     def __eq__(self, other):
         assert isinstance(other, _R4Vector), f"rhs has type {type(other)}"
         return np.allclose(self.ndarray, other.ndarray)
@@ -39,11 +38,11 @@ class _R4Vector:
     def __mul__(self, scalar: Number):
         assert isinstance(scalar, Number)
         return _R4Vector(scalar * self.ndarray)
- 
+
     def __truediv__(self, scalar: Number):
         assert isinstance(scalar, Number)
         return _R4Vector(self.ndarray / scalar)
-    
+
     def project_onto_xyz(self):
         _result = self.ndarray.copy()
         _result[3] = 0
@@ -59,7 +58,7 @@ class _R4Vector:
 
 class _Point:
     """
-    This represents a point in the affine patch of RP^3, 
+    This represents a point in the affine patch of RP^3,
     identified with a eucliden point in R^3
     """
     def __init__(self, ndarray):

@@ -4,3 +4,4 @@ venv/
 *pyc
 *ppm
 *egg*
+reports/*xml

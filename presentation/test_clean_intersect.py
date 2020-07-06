@@ -8,6 +8,7 @@ from presentation.clean_intersect import (
     intersect_wing2
 )
 
+
 # stem tests
 def test_ray_parallel_to_stem():
     ray = Ray(Point(-1, 0, 1), Vector(0, 1, 1))

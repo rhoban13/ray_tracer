@@ -73,7 +73,7 @@ class Camera:
 
     def render(self, world):
         return self._render_multiprocess(world)
-        #return self._render_single_process(world)
+        # return self._render_single_process(world)
 
 
 def ray_for_pixel(camera, x, y):

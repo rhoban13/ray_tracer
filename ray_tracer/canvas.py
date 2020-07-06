@@ -55,8 +55,8 @@ def canvas_to_ppm(canvas):
 
 def canvas_to_png(filepath, canvas):
     '''
-    opencv uses BGR, our Canvas uses RGB.  
+    opencv uses BGR, our Canvas uses RGB.
     Transform that here before writing
     '''
-    as_bgr = np.flip(canvas._image, 2)
+    # as_bgr = np.flip(canvas._image, 2)
     cv2.imwrite(filepath, canvas._image)

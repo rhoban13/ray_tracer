@@ -1,121 +1,115 @@
 from ray_tracer.rays import Ray
+from ray_tracer.shapes.crooked_plane import DefaultCrookedPlane
 from ray_tracer.tuples import Point, Vector
 
-from examples.crooked_plane import DefaultCrookedPlane, crooked_plane
 
-
-def test_parallel_to_stem_does_not_interect():
+# stem tests
+def test_ray_parallel_to_stem():
     # Given
-    origin = Point(1, 0, 1)
-    direction = Vector(0, 5, 7)
-    ray = Ray(origin, direction)
+    cp = DefaultCrookedPlane()
+    ray = Ray(Point(-1, 0, 1), Vector(0, 1, 1))
 
     # When
-    cp = DefaultCrookedPlane()
-    intersections = cp.intersect_stem(ray)
+    xs = cp.intersect_stem(ray)
 
     # Then
-    assert not intersections
+    assert xs is None
 
 
-def test_intersects_stem():
+def test_ray_intersects_stem():
     # Given
-    origin = Point(1, 0, 1)
-    direction = Vector(-1, 0, 0)
-    ray = Ray(origin, direction)
+    cp = DefaultCrookedPlane()
+    ray = Ray(Point(0, 0, -1), Vector(1, 0, 0))
 
     # When
-    cp = DefaultCrookedPlane()
-    intersection = cp.intersect_stem(ray)
+    xs = cp.intersect_stem(ray)
 
     # Then
-    assert intersection.t == 1
+    assert xs.t == 0
 
 
-def test_parallel_to_wing1():
+def test_ray_misses_stem():
     # Given
-    origin = Point(1, 1, 0)
-    direction = Vector(0, 1, -1)
-    ray = Ray(origin, direction)
+    cp = DefaultCrookedPlane()
+    ray = Ray(Point(0, 1, 0), Vector(1, 0, 1))
 
     # When
-    cp = DefaultCrookedPlane()
-    intersections = cp.intersect_wing1(ray)
+    xs = cp.intersect_stem(ray)
 
     # Then
-    assert not intersections
+    assert xs is None
 
 
-def test_intersects_wing1():
+# wing1 tests
+def test_ray_parallel_to_wing1():
     # Given
-    origin = Point(1, 1, 0)
-    direction = Vector(0, 0, -1)
-    ray = Ray(origin, direction)
+    cp = DefaultCrookedPlane()
+    ray = Ray(Point(1, 1, 0), Vector(0, 1, -1))
 
     # When
-    cp = DefaultCrookedPlane()
-    intersections = cp.intersect(ray)
+    xs = cp.intersect_wing1(ray)
 
     # Then
-    assert intersections.count == 1
-    intersection = intersections[0]
-    assert intersection.t == 1
+    xs is None
 
 
-def test_misses_wing1():
+def test_ray_intersects_wing1():
     # Given
-    origin = Point(-1, 1, 0)
-    direction = Vector(0, 0, -1)
-    ray = Ray(origin, direction)
+    cp = DefaultCrookedPlane()
+    ray = Ray(Point(1, 0, -1), Vector(0, 0, 1))
 
     # When
-    cp = DefaultCrookedPlane()
-    intersections = cp.intersect(ray)
+    xs = cp.intersect_wing1(ray)
 
     # Then
-    assert not intersections
+    assert xs.t == 1
 
 
-def test_parallel_to_wing2():
+def test_ray_misses_to_wing1():
     # Given
-    origin = Point(-1, 1, 0)
-    direction = Vector(0, 1, 1)
-    ray = Ray(origin, direction)
+    cp = DefaultCrookedPlane()
+    ray = Ray(Point(-1, 0, 0), Vector(0, 1, 1))
 
     # When
-    cp = DefaultCrookedPlane()
-    intersections = cp.intersect_wing2(ray)
+    xs = cp.intersect_wing1(ray)
 
     # Then
-    assert not intersections
+    assert xs is None
 
 
-def test_intersects_wing2():
+# wing2 tests
+def test_ray_parallel_to_wing2():
     # Given
-    origin = Point(-1, 1, 0)
-    direction = Vector(0, 0, 1)
-    ray = Ray(origin, direction)
+    cp = DefaultCrookedPlane()
+    ray = Ray(Point(-1, 1, 0), Vector(0, 1, 1))
 
     # When
-    cp = DefaultCrookedPlane()
-    intersection = cp.intersect_wing2(ray)
+    xs = cp.intersect_wing2(ray)
 
     # Then
-    assert intersection.t == 1
+    assert xs is None
 
 
-def test_misses_wing2():
+def test_ray_intersects_wing2():
     # Given
-    origin = Point(1, 1, 0)
-    direction = Vector(0, 0, 1)
-    ray = Ray(origin, direction)
+    cp = DefaultCrookedPlane()
+    ray = Ray(Point(-1, 0, -1), Vector(0, 0, 1))
 
     # When
-    cp = DefaultCrookedPlane()
-    intersections = cp.intersect_wing2(ray)
+    xs = cp.intersect_wing2(ray)
 
     # Then
-    assert not intersections
+    assert xs.t == 1
+
+
+def test_ray_misses_to_wing2():
+    # Given
+    cp = DefaultCrookedPlane()
+    ray = Ray(Point(1, 0, 0), Vector(0, 1, -1))
+
+    # When
+    xs = cp.intersect_wing2(ray)
+    assert xs is None
 
 
 def test_normal_at_stem():
@@ -144,7 +138,7 @@ def test_normal_at_wing1():
 
 def test_normal_at_wing2():
     # Given
-    p = Point(-3, 5, 5)
+    p = Point(-3, 5, -5)
 
     # When
     cp = DefaultCrookedPlane()
