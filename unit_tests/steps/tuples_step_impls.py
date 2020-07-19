@@ -1,9 +1,5 @@
-import math
 
-from behave import register_type
-from parse_type import TypeBuilder
-
-from ray_tracer.tuples import R4Vector, Point, Vector, normalize, reflect, is_point, is_vector, is_r4vector
+from ray_tracer.tuples import R4Vector, Point, Vector, normalize, reflect, is_r4vector
 from ray_tracer.colors import Color
 
 @given(u'{name} = R4Vector({x:g}, {y:g}, {z:g}, {w:g})')
@@ -17,17 +13,6 @@ def step_impl(context, name, x, y, z):
 @given(u'{name} = Vector({x:g}, {y:g}, {z:g})')
 def step_impl(context, name, x, y, z):
     setattr(context, name, Vector(x, y, z))
-
-
-parse_interesting_trig_values = TypeBuilder.make_enum({
-    "0": 0, 
-    "√2/2": math.sqrt(2)/2,
-    "1": 1,
-    "-√2/2": -math.sqrt(2)/2,
-    "-1": -1
-})
-register_type(InterestingTrigValue=parse_interesting_trig_values)
-
 
 @given(u'{n} = Vector({dx:InterestingTrigValue}, {dy:InterestingTrigValue}, {dz:InterestingTrigValue})')
 def step_impl(context, n, dx, dy, dz):
@@ -72,11 +57,6 @@ def step_impl(context, p3, p2, p1):
 #     assert not is_vector(context.a)
 
 
-parse_point_or_vector = TypeBuilder.make_enum({
-    "point": is_point, 
-    "vector": is_vector,
-})
-register_type(ElementIn3D=parse_point_or_vector)
 
 @then(u'{a} projects to a {type_checker:ElementIn3D}')
 def step_impl(context, a, type_checker):

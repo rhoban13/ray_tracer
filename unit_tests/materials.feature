@@ -13,14 +13,14 @@ Scenario: The default material
     And m.specular == 0.9
     And m.shininess == 200.0
 
-# Scenario: Reflectivity for the default material
-#   Given m â† material()
-#   Then m.reflective = 0.0
+Scenario: Reflectivity for the default material
+  Given m = Material()
+  Then m.reflective == 0.0
 
-# Scenario: Transparency and Refractive Index for the default material
-#   Given m â† material()
-#   Then m.transparency = 0.0
-#     And m.refractive_index = 1.0
+Scenario: Transparency and Refractive Index for the default material
+  Given m = Material()
+  Then m.transparency == 0.0
+    And m.refractive_index == 1.0
 
 Scenario: Lighting with the eye between the light and the surface
   Given eyev = Vector(0, 0, -1)

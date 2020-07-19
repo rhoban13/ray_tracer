@@ -1,15 +1,14 @@
-import itertools
-import re
-
 from behave import given, when, then, step
 
 from ray_tracer.colors import Color
+from ray_tracer.intersections import Computations
 from ray_tracer.lights import point_light
 from ray_tracer.shapes import set_transform, Sphere
 from ray_tracer.transformations import Scaling, Translation  # noqa
 from ray_tracer.tuples import Point
-from ray_tracer.world import World, intersect_world, shade_hit, color_at, is_shadowed
+from ray_tracer.world import World, intersect_world, shade_hit, color_at, is_shadowed, reflected_color, refracted_color
 
+from gherkin_table_parser import set_props_from_table
 
 
 @given(u'{w} = World()')
@@ -32,22 +31,7 @@ def step_impl(context, w):
 @given(u'{s} = Sphere() with')
 def step_impl(context, s):
     _s = Sphere()
-    for row in itertools.chain([context.table.headings], context.table):
-        k, v = row
-        if k.startswith('material'):
-            _, materialprop = k.split('.')
-            if materialprop == "color":
-                rgb = [float(p) for p in re.findall('\d+\.?\d*', v)]
-                value = Color(*rgb)
-            else:
-                value = float(v)
-            print("setting", materialprop, " to ", value)
-            setattr(_s.material, materialprop, value)
-        elif k == 'transform':
-            value = eval(v)
-            _s = set_transform(_s, value)
-        else:
-            raise NotImplementedError("Unexpected table")
+    set_props_from_table(context, _s)
     setattr(context, s, _s)
 
 
@@ -60,11 +44,10 @@ def default_world():
 
     s2 = set_transform(Sphere(), Scaling(.5, .5, .5))
 
-    return World(objects=(s1, s2), light=light)
+    return World(objects=[s1, s2], light=light)
 
 @step(u'{w} = default_world()')
 def step_impl(context, w):
-    
     setattr(context, w, default_world())
 
 
@@ -72,8 +55,6 @@ def step_impl(context, w):
 def step_impl(context, world, object_):
     _world = getattr(context, world)
     _object = getattr(context, object_)
-    print(_object)
-    print(_world.objects)
     assert _object in _world.objects
 
 
@@ -94,6 +75,14 @@ def step_impl(context, shape, first_or_second, world):
         setattr(context, shape, _world.objects[1])
     else:
         raise NotImplementedError('Unknown')
+
+
+@when(u'{c} = shade_hit({world}, {comps}, {remaining:d})')
+def step_impl(context, c, world, comps, remaining):
+    _world = getattr(context, world)
+    _comps = getattr(context, comps)
+    _c = shade_hit(_world, _comps, remaining)
+    setattr(context, c, _c)
 
 
 @when(u'{c} = shade_hit({world}, {comps})')
@@ -131,6 +120,49 @@ def step_impl(context, s, world):
     _s = getattr(context, s)
     _world = getattr(context, world)
     _world.add_object(_s)
+
+@when(u'{color} = reflected_color({w}, {comps}, {remaining:g})')
+def step_impl(context, color, w, comps, remaining):
+    _w = getattr(context, w)
+    _comps = getattr(context, comps)
+    _color = reflected_color(_w, _comps, remaining)
+    setattr(context, color, _color)
+
+
+@when(u'{color} = reflected_color({w}, {comps})')
+def step_impl(context, color, w, comps):
+    _w = getattr(context, w)
+    _comps = getattr(context, comps)
+    _color = reflected_color(_w, _comps)
+    setattr(context, color, _color)
+
+
+@then(u'color_at({w}, {r}) should terminate successfully')
+def step_impl(context, w, r):
+    _w = getattr(context, w)
+    _r = getattr(context, r)
+
+    # This will raise RecursionError if we don't terminate successfully
+    color_at(_w, _r)
+
+
+@when(u'{c} = refracted_color({w}, {comps}, {remaining:d})')
+def step_impl(context, c, w, comps, remaining):
+    _w = getattr(context, w)
+    assert isinstance(_w, World)
+
+    _comps = getattr(context, comps)
+    assert isinstance(_comps, Computations)
+
+    _c = refracted_color(_w, _comps, remaining)
+    setattr(context, c, _c)
+
+
+@given(u'{shape} has')
+def step_impl(context, shape):
+    _shape = getattr(context, shape)
+    set_props_from_table(context, _shape)
+
 
 # Copyright 2020 Bloomberg Finance L.P.
 #

@@ -2,7 +2,7 @@ from functools import total_ordering
 import heapq
 
 from ray_tracer.rays import position
-from ray_tracer.tuples import dot
+from ray_tracer.tuples import dot, reflect
 
 
 @total_ordering
@@ -56,7 +56,7 @@ EPSILON = 1e-5
 
 
 class Computations:
-    def __init__(self, intersection, ray):
+    def __init__(self, intersection, ray, xs=None):
         self.intersection = intersection
         self.ray = ray
 
@@ -71,6 +71,38 @@ class Computations:
             self.inside = False
 
         self.over_point = self.point + self.normalv * EPSILON
+        self.under_point = self.point - self.normalv * EPSILON
+
+        self.reflectv = reflect(ray.direction, self.normalv)
+
+        self.n1, self.n2 = self.compute_refractive_indexes(intersection, xs)
+
+    def compute_refractive_indexes(self, this_intersection, intersections):
+        if not intersections:
+            return None, None
+
+        containers = []
+        for i in intersections:
+            if i == this_intersection:
+                n1 = self._compute_refractive_index(containers)
+
+            if i.object in containers:
+                containers.remove(i.object)
+            else:
+                containers.append(i.object)
+
+            if i == this_intersection:
+                n2 = self._compute_refractive_index(containers)
+                break
+        return n1, n2
+
+    @staticmethod
+    def _compute_refractive_index(containers):
+        if not containers:
+            n = 1
+        else:
+            n = containers[-1].material.refractive_index
+        return n
 
     @property
     def t(self):
@@ -91,8 +123,8 @@ class Computations:
 '''
 
 
-def prepare_computations(intersection, ray):
-    return Computations(intersection, ray)
+def prepare_computations(intersection, ray, xs=None):
+    return Computations(intersection, ray, xs)
 
 # Copyright 2020 Bloomberg Finance L.P.
 #

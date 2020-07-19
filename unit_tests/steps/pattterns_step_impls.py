@@ -3,15 +3,14 @@ from ray_tracer.patterns import (
     stripe_pattern,
     pattern_at_shape,
     set_pattern_transform,
-    Pattern,
-    TransformedPattern,
     gradient_pattern,
     ring_pattern,
     checkers_pattern
 )
-from ray_tracer.transformations import Translation, Scaling, Identity
+from ray_tracer.transformations import Translation, Scaling
 from ray_tracer.tuples import Point
 
+from test_pattern import test_pattern
 
 @given(u'{material}.pattern = stripe_pattern(Color({r1:g}, {g1:g}, {b1:g}), Color({r2:g}, {g2:g}, {b2:g}))')
 def step_impl(context, material, r1, g1, b1, r2, g2, b2):
@@ -57,13 +56,7 @@ def step_impl(context, pattern, dx, dy, dz):
     setattr(context, pattern, _pattern)
 
 
-class TestPattern(Pattern):
-    def pattern_at(self, point):
-        return Color(point.x, point.y, point.z)
 
-
-def test_pattern():
-    return TransformedPattern(TestPattern(), Identity())
 
 
 @given(u'{pattern} = test_pattern()')

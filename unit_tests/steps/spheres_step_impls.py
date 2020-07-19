@@ -7,6 +7,7 @@ from ray_tracer.shapes import set_transform, Sphere
 from ray_tracer.transformations import Scaling, Translation, rotation_z
 from ray_tracer.tuples import Point
 
+from gherkin_table_parser import set_props_from_table
 
 @given(u'{s} = Sphere()')
 def step_impl(context, s):
@@ -91,6 +92,26 @@ def step_impl(context, thing, property_, value):
 def step_impl(context, m, s):
     _s = getattr(context, s)
     setattr(context, m, _s.material)
+
+def glass_sphere():
+    s = Sphere()
+    s.material.transparency = 1.0
+    s.material.refractive_index = 1.5
+    return s
+
+
+@given(u'{s} = glass_sphere()')
+def step_impl(context, s):
+    _s = glass_sphere()
+    setattr(context, s, _s)
+
+
+@given(u'{s} = glass_sphere() with')
+def step_impl(context, s):
+    _s = glass_sphere()
+    set_props_from_table(context, _s)
+    setattr(context, s, _s)
+
 
 # Copyright 2020 Bloomberg Finance L.P.
 #

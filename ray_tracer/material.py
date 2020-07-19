@@ -13,6 +13,9 @@ class Material:
     pattern: Pattern = None
     specular: float = .9
     shininess: float = 200.0
+    reflective: float = 0.0
+    transparency: float = 0.0
+    refractive_index: float = 1
 
 
 def lighting(material, object_, light, point, eyev, normalv, in_shadow=False):

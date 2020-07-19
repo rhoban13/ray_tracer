@@ -2,6 +2,8 @@ from behave import given, then
 
 from ray_tracer.shapes import Plane
 
+from gherkin_table_parser import set_props_from_table
+
 
 @given(u'{p} = Plane()')
 def step_impl(context, p):
@@ -13,6 +15,13 @@ def step_impl(context, p):
 def step_impl(context, xs):
     _xs = getattr(context, xs)
     assert not _xs
+
+
+@given(u'{shape} = Plane() with')
+def step_impl(context, shape):
+    _shape = Plane()
+    set_props_from_table(context, _shape)
+    setattr(context, shape, _shape)
 
 # Copyright 2020 Bloomberg Finance L.P.
 #

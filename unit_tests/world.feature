@@ -103,134 +103,134 @@ Scenario: shade_hit() is given an intersection in shadow
     And c = shade_hit(w, comps)
   Then c == Color(0.1, 0.1, 0.1)
 
-# Scenario: The reflected color for a nonreflective material
-#   Given w â† default_world()
-#     And r â† ray(point(0, 0, 0), vector(0, 0, 1))
-#     And shape â† the second object in w
-#     And shape.material.ambient â† 1
-#     And i â† intersection(1, shape)
-#   When comps â† prepare_computations(i, r)
-#     And color â† reflected_color(w, comps)
-#   Then color = color(0, 0, 0)
+Scenario: The reflected color for a nonreflective material
+  Given w = default_world()
+    And r = Ray(Point(0, 0, 0), Vector(0, 0, 1))
+    And shape = the second object in w
+    And shape.material.ambient = 1
+    And i = Intersection(1, shape)
+  When comps = prepare_computations(i, r)
+    And color = reflected_color(w, comps)
+  Then color == Color(0, 0, 0)
 
-# Scenario: The reflected color for a reflective material
-#   Given w â† default_world()
-#     And shape â† plane() with:                 
-#       | material.reflective | 0.5                   |
-#       | transform           | translation(0, -1, 0) |   
-#     And shape is added to w
-#     And r â† ray(point(0, 0, -3), vector(0, -âˆš2/2, âˆš2/2))
-#     And i â† intersection(âˆš2, shape)
-#   When comps â† prepare_computations(i, r)
-#     And color â† reflected_color(w, comps)
-#   Then color = color(0.19032, 0.2379, 0.14274)
+Scenario: The reflected color for a reflective material
+  Given w = default_world()
+    And shape = Plane() with:                 
+      | material.reflective | 0.5                   |
+      | transform           | Translation(0, -1, 0) |   
+    And shape is added to w
+    And r = Ray(Point(0, 0, -3), Vector(0, -√2/2, √2/2))
+    And i = Intersection(√2, shape)
+  When comps = prepare_computations(i, r)
+    And color = reflected_color(w, comps)
+  Then color == Color(0.19032, 0.2379, 0.14274)
 
-# Scenario: shade_hit() with a reflective material
-#   Given w â† default_world()
-#     And shape â† plane() with:
-#       | material.reflective | 0.5                   |
-#       | transform           | translation(0, -1, 0) |
-#     And shape is added to w
-#     And r â† ray(point(0, 0, -3), vector(0, -âˆš2/2, âˆš2/2))
-#     And i â† intersection(âˆš2, shape)
-#   When comps â† prepare_computations(i, r)
-#     And color â† shade_hit(w, comps)
-#   Then color = color(0.87677, 0.92436, 0.82918)
+Scenario: shade_hit() with a reflective material
+  Given w = default_world()
+    And shape = Plane() with:
+      | material.reflective | 0.5                   |
+      | transform           | Translation(0, -1, 0) |
+    And shape is added to w
+    And r = Ray(Point(0, 0, -3), Vector(0, -√2/2, √2/2))
+    And i = Intersection(√2, shape)
+  When comps = prepare_computations(i, r)
+    And color = shade_hit(w, comps)
+  Then color == Color(0.87677, 0.92436, 0.82918)
 
-# Scenario: color_at() with mutually reflective surfaces
-#   Given w â† world()
-#     And w.light â† point_light(point(0, 0, 0), color(1, 1, 1))
-#     And lower â† plane() with:
-#       | material.reflective | 1                     |
-#       | transform           | translation(0, -1, 0) |
-#     And lower is added to w
-#     And upper â† plane() with:
-#       | material.reflective | 1                    |
-#       | transform           | translation(0, 1, 0) |
-#     And upper is added to w
-#     And r â† ray(point(0, 0, 0), vector(0, 1, 0))
-#   Then color_at(w, r) should terminate successfully
+Scenario: color_at() with mutually reflective surfaces
+  Given w = World()
+    And w.light = point_light(Point(0, 0, 0), Color(1, 1, 1))
+    And lower = Plane() with:
+      | material.reflective | 1                     |
+      | transform           | Translation(0, -1, 0) |
+    And lower is added to w
+    And upper = Plane() with:
+      | material.reflective | 1                    |
+      | transform           | Translation(0, 1, 0) |
+    And upper is added to w
+    And r = Ray(Point(0, 0, 0), Vector(0, 1, 0))
+  Then color_at(w, r) should terminate successfully
 
-# Scenario: The reflected color at the maximum recursive depth
-#   Given w â† default_world()
-#     And shape â† plane() with:
-#       | material.reflective | 0.5                   |
-#       | transform           | translation(0, -1, 0) |
-#     And shape is added to w
-#     And r â† ray(point(0, 0, -3), vector(0, -âˆš2/2, âˆš2/2))
-#     And i â† intersection(âˆš2, shape)
-#   When comps â† prepare_computations(i, r)
-#     And color â† reflected_color(w, comps, 0)    
-#   Then color = color(0, 0, 0)
+Scenario: The reflected color at the maximum recursive depth
+  Given w = default_world()
+    And shape = Plane() with:
+      | material.reflective | 0.5                   |
+      | transform           | Translation(0, -1, 0) |
+    And shape is added to w
+    And r = Ray(Point(0, 0, -3), Vector(0, -√2/2, √2/2))
+    And i = Intersection(√2, shape)
+  When comps = prepare_computations(i, r)
+    And color = reflected_color(w, comps, 0)    
+  Then color == Color(0, 0, 0)
 
-# Scenario: The refracted color with an opaque surface
-#   Given w â† default_world()
-#     And shape â† the first object in w
-#     And r â† ray(point(0, 0, -5), vector(0, 0, 1))
-#     And xs â† intersections(4:shape, 6:shape)
-#   When comps â† prepare_computations(xs[0], r, xs)
-#     And c â† refracted_color(w, comps, 5)
-#   Then c = color(0, 0, 0)
+Scenario: The refracted color with an opaque surface
+  Given w = default_world()
+    And shape = the first object in w
+    And r = Ray(Point(0, 0, -5), Vector(0, 0, 1))
+    And xs = intersections_shorthand(4:shape, 6:shape)
+  When comps = prepare_computations(xs[0], r, xs)
+    And c = refracted_color(w, comps, 5)
+  Then c == Color(0, 0, 0)
 
-# Scenario: The refracted color at the maximum recursive depth
-#   Given w â† default_world()
-#     And shape â† the first object in w
-#     And shape has:
-#       | material.transparency     | 1.0 |
-#       | material.refractive_index | 1.5 |
-#     And r â† ray(point(0, 0, -5), vector(0, 0, 1))
-#     And xs â† intersections(4:shape, 6:shape)
-#   When comps â† prepare_computations(xs[0], r, xs)
-#     And c â† refracted_color(w, comps, 0)
-#   Then c = color(0, 0, 0)
+Scenario: The refracted color at the maximum recursive depth
+  Given w = default_world()
+    And shape = the first object in w
+    And shape has:
+      | material.transparency     | 1.0 |
+      | material.refractive_index | 1.5 |
+    And r = Ray(Point(0, 0, -5), Vector(0, 0, 1))
+    And xs = intersections_shorthand(4:shape, 6:shape)
+  When comps = prepare_computations(xs[0], r, xs)
+    And c = refracted_color(w, comps, 0)
+  Then c == Color(0, 0, 0)
 
-# Scenario: The refracted color under total internal reflection
-#   Given w â† default_world()
-#     And shape â† the first object in w
-#     And shape has:
-#       | material.transparency     | 1.0 |
-#       | material.refractive_index | 1.5 |
-#     And r â† ray(point(0, 0, âˆš2/2), vector(0, 1, 0))
-#     And xs â† intersections(-âˆš2/2:shape, âˆš2/2:shape)
-#   # NOTE: this time you're inside the sphere, so you need
-#   # to look at the second intersection, xs[1], not xs[0]
-#   When comps â† prepare_computations(xs[1], r, xs)
-#     And c â† refracted_color(w, comps, 5)
-#   Then c = color(0, 0, 0)
+Scenario: The refracted color under total internal reflection
+  Given w = default_world()
+    And shape = the first object in w
+    And shape has:
+      | material.transparency     | 1.0 |
+      | material.refractive_index | 1.5 |
+    And r = Ray(Point(0, 0, √2/2), Vector(0, 1, 0))
+    And xs = intersections_shorthand(-√2/2:shape, √2/2:shape)
+  # NOTE: this time you're inside the sphere, so you need
+  # to look at the second intersection, xs[1], not xs[0]
+  When comps = prepare_computations(xs[1], r, xs)
+    And c = refracted_color(w, comps, 5)
+  Then c == Color(0, 0, 0)
 
-# Scenario: The refracted color with a refracted ray
-#   Given w â† default_world()
-#     And A â† the first object in w
-#     And A has:
-#       | material.ambient | 1.0            |
-#       | material.pattern | test_pattern() |
-#     And B â† the second object in w
-#     And B has:
-#       | material.transparency     | 1.0 |
-#       | material.refractive_index | 1.5 |
-#     And r â† ray(point(0, 0, 0.1), vector(0, 1, 0))
-#     And xs â† intersections(-0.9899:A, -0.4899:B, 0.4899:B, 0.9899:A)
-#   When comps â† prepare_computations(xs[2], r, xs)
-#     And c â† refracted_color(w, comps, 5)
-#   Then c = color(0, 0.99888, 0.04725)
+Scenario: The refracted color with a refracted ray
+  Given w = default_world()
+    And A = the first object in w
+    And A has:
+      | material.ambient | 1.0            |
+      | material.pattern | test_pattern() |
+    And B = the second object in w
+    And B has:
+      | material.transparency     | 1.0 |
+      | material.refractive_index | 1.5 |
+    And r = Ray(Point(0, 0, 0.1), Vector(0, 1, 0))
+    And xs = intersections_shorthand(-0.9899:A, -0.4899:B, 0.4899:B, 0.9899:A)
+  When comps = prepare_computations(xs[2], r, xs)
+    And c = refracted_color(w, comps, 5)
+  Then c == Color(0, 0.99888, 0.04725)
 
-# Scenario: shade_hit() with a transparent material
-#   Given w â† default_world()
-#     And floor â† plane() with:
-#       | transform                 | translation(0, -1, 0) |
-#       | material.transparency     | 0.5                   |
-#       | material.refractive_index | 1.5                   |
-#     And floor is added to w
-#     And ball â† sphere() with:
-#       | material.color     | (1, 0, 0)                  |
-#       | material.ambient   | 0.5                        |
-#       | transform          | translation(0, -3.5, -0.5) |
-#     And ball is added to w
-#     And r â† ray(point(0, 0, -3), vector(0, -âˆš2/2, âˆš2/2))
-#     And xs â† intersections(âˆš2:floor)
-#   When comps â† prepare_computations(xs[0], r, xs)
-#     And color â† shade_hit(w, comps, 5)
-#   Then color = color(0.93642, 0.68642, 0.68642)
+Scenario: shade_hit() with a transparent material
+  Given w = default_world()
+    And floor = Plane() with:
+      | transform                 | Translation(0, -1, 0) |
+      | material.transparency     | 0.5                   |
+      | material.refractive_index | 1.5                   |
+    And floor is added to w
+    And ball = Sphere() with:
+      | material.color     | (1, 0, 0)                  |
+      | material.ambient   | 0.5                        |
+      | transform          | Translation(0, -3.5, -0.5) |
+    And ball is added to w
+    And r = Ray(Point(0, 0, -3), Vector(0, -√2/2, √2/2))
+    And xs = intersections_shorthand(√2:floor)
+  When comps = prepare_computations(xs[0], r, xs)
+    And color = shade_hit(w, comps, 5)
+  Then color == Color(0.93642, 0.68642, 0.68642)
 
 # Scenario: shade_hit() with a reflective, transparent material
 #   Given w â† default_world()
