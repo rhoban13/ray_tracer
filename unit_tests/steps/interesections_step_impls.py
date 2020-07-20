@@ -2,7 +2,7 @@ from behave import register_type
 import math
 from parse_type import TypeBuilder
 
-from ray_tracer.intersections import Intersection, Intersections, hit, prepare_computations, EPSILON
+from ray_tracer.intersections import Intersection, Intersections, hit, prepare_computations, EPSILON, schlick
 from ray_tracer.rays import Ray
 
 from environment import parse_interesting_trig_values
@@ -125,6 +125,13 @@ def step_impl(context, comps):
 def step_impl(context, comps):
     _comps = getattr(context, comps)
     assert _comps.point.z < _comps.under_point.z
+
+
+@when(u'{reflectance} = schlick({comps})')
+def step_impl(context, reflectance, comps):
+    _comps = getattr(context, comps)
+    _reflectance = schlick(_comps)
+    setattr(context, reflectance, _reflectance)
 
 
 # Copyright 2020 Bloomberg Finance L.P.

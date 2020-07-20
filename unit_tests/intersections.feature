@@ -129,29 +129,29 @@ Scenario Outline: Finding n1 and n2 at various intersections
     | 4     | 2.5 | 1.5 |
     | 5     | 1.5 | 1.0 |
 
-# Scenario: The Schlick approximation under total internal reflection
-#   Given shape â† glass_sphere()
-#     And r â† ray(point(0, 0, âˆš2/2), vector(0, 1, 0))
-#     And xs â† intersections(-âˆš2/2:shape, âˆš2/2:shape)
-#   When comps â† prepare_computations(xs[1], r, xs)
-#     And reflectance â† schlick(comps)
-#   Then reflectance = 1.0
+Scenario: The Schlick approximation under total internal reflection
+  Given shape = glass_sphere()
+    And r = Ray(Point(0, 0, √2/2), Vector(0, 1, 0))
+    And xs = intersections_shorthand(-√2/2:shape, √2/2:shape)
+  When comps = prepare_computations(xs[1], r, xs)
+    And reflectance = schlick(comps)
+  Then reflectance == 1.0
 
-# Scenario: The Schlick approximation with a perpendicular viewing angle
-#   Given shape â† glass_sphere()
-#     And r â† ray(point(0, 0, 0), vector(0, 1, 0))
-#     And xs â† intersections(-1:shape, 1:shape)
-#   When comps â† prepare_computations(xs[1], r, xs)
-#     And reflectance â† schlick(comps)
-#   Then reflectance = 0.04
+Scenario: The Schlick approximation with a perpendicular viewing angle
+  Given shape = glass_sphere()
+    And r = Ray(Point(0, 0, 0), Vector(0, 1, 0))
+    And xs = intersections_shorthand(-1:shape, 1:shape)
+  When comps = prepare_computations(xs[1], r, xs)
+    And reflectance = schlick(comps)
+  Then np.round(reflectance, 2) == 0.04
 
-# Scenario: The Schlick approximation with small angle and n2 > n1
-#   Given shape â† glass_sphere()
-#     And r â† ray(point(0, 0.99, -2), vector(0, 0, 1))
-#     And xs â† intersections(1.8589:shape)
-#   When comps â† prepare_computations(xs[0], r, xs)
-#     And reflectance â† schlick(comps)
-#   Then reflectance = 0.48873
+Scenario: The Schlick approximation with small angle and n2 > n1
+  Given shape = glass_sphere()
+    And r = Ray(Point(0, 0.99, -2), Vector(0, 0, 1))
+    And xs = intersections_shorthand(1.8589:shape)
+  When comps = prepare_computations(xs[0], r, xs)
+    And reflectance = schlick(comps)
+  Then np.round(reflectance, 5) == 0.48873
 
 # Scenario: An intersection can encapsulate `u` and `v`
 #   Given s â† triangle(point(0, 1, 0), point(-1, 0, 0), point(1, 0, 0))

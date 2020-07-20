@@ -1,7 +1,7 @@
 import math
 
 from ray_tracer.colors import BLACK
-from ray_tracer.intersections import Intersections, hit, prepare_computations
+from ray_tracer.intersections import Intersections, hit, prepare_computations, schlick
 from ray_tracer.lights import Light
 from ray_tracer.material import lighting
 from ray_tracer.rays import Ray
@@ -31,6 +31,11 @@ class World:
     def shade_hit(self, comps, remaining=5):
         reflected = self.reflected_color(comps, remaining)
         refracted = self.refracted_color(comps, remaining)
+        if comps.object.material.reflective > 0 and comps.object.material.transparency > 0:
+            reflectance = schlick(comps)
+            reflected_plus_refracted = reflected * reflectance + refracted * (1-reflectance)
+        else:
+            reflected_plus_refracted = reflected + refracted
 
         if isinstance(self.light, Light):
             shadowed = is_shadowed(self, comps.over_point)
@@ -43,10 +48,10 @@ class World:
                 comps.normalv,
                 shadowed,
             )
-            return surface + reflected + refracted
+            return surface + reflected_plus_refracted
 
         assert isinstance(self.light, list), f"light is {self.light}"
-        output = BLACK + reflected + refracted
+        output = BLACK + reflected_plus_refracted
         for light in self.light:
             shadowed = is_shadowed(self, comps.over_point, light)
             output += lighting(
@@ -65,7 +70,7 @@ class World:
         a_hit = hit(intersections)
         if a_hit is None:
             return BLACK
-        comps = prepare_computations(a_hit, ray)
+        comps = prepare_computations(a_hit, ray, intersections)
         return self.shade_hit(comps, remaining)
 
     def add_object(self, object_):

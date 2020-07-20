@@ -232,21 +232,21 @@ Scenario: shade_hit() with a transparent material
     And color = shade_hit(w, comps, 5)
   Then color == Color(0.93642, 0.68642, 0.68642)
 
-# Scenario: shade_hit() with a reflective, transparent material
-#   Given w â† default_world()
-#     And r â† ray(point(0, 0, -3), vector(0, -âˆš2/2, âˆš2/2))
-#     And floor â† plane() with:
-#       | transform                 | translation(0, -1, 0) |
-#       | material.reflective       | 0.5                   |
-#       | material.transparency     | 0.5                   |
-#       | material.refractive_index | 1.5                   |
-#     And floor is added to w
-#     And ball â† sphere() with:
-#       | material.color     | (1, 0, 0)                  |
-#       | material.ambient   | 0.5                        |
-#       | transform          | translation(0, -3.5, -0.5) |
-#     And ball is added to w
-#     And xs â† intersections(âˆš2:floor)
-#   When comps â† prepare_computations(xs[0], r, xs)
-#     And color â† shade_hit(w, comps, 5)
-#   Then color = color(0.93391, 0.69643, 0.69243)
+Scenario: shade_hit() with a reflective, transparent material
+  Given w = default_world()
+    And r = Ray(Point(0, 0, -3), Vector(0, -√2/2, √2/2))
+    And floor = Plane() with:
+      | transform                 | Translation(0, -1, 0) |
+      | material.reflective       | 0.5                   |
+      | material.transparency     | 0.5                   |
+      | material.refractive_index | 1.5                   |
+    And floor is added to w
+    And ball = Sphere() with:
+      | material.color     | (1, 0, 0)                  |
+      | material.ambient   | 0.5                        |
+      | transform          | Translation(0, -3.5, -0.5) |
+    And ball is added to w
+    And xs = intersections_shorthand(√2:floor)
+  When comps = prepare_computations(xs[0], r, xs)
+    And color = shade_hit(w, comps, 5)
+  Then color == Color(0.93391, 0.69643, 0.69243)

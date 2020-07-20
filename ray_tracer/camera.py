@@ -45,8 +45,10 @@ class Camera:
 
     def _process_slice(self, world, y_range):
         image = Canvas(self.hsize, self.vsize)
+        total_cols = len(y_range)
         for y in y_range:
-            self.logger.info("Working pixels y=%s", y)
+            percent_completed = int(100 * (y-y_range[0])/total_cols)
+            self.logger.info(f"{percent_completed}% completed")
             for x in range(0, self.hsize - 1):
                 ray = self.ray_for_pixel(x, y)
                 color = world.color_at(ray)

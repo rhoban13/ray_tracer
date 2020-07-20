@@ -1,5 +1,6 @@
 from functools import total_ordering
 import heapq
+import math
 
 from ray_tracer.rays import position
 from ray_tracer.tuples import dot, reflect
@@ -79,7 +80,7 @@ class Computations:
 
     def compute_refractive_indexes(self, this_intersection, intersections):
         if not intersections:
-            return None, None
+            intersections = Intersections(this_intersection)
 
         containers = []
         for i in intersections:
@@ -125,6 +126,22 @@ class Computations:
 
 def prepare_computations(intersection, ray, xs=None):
     return Computations(intersection, ray, xs)
+
+
+def schlick(comps):
+    cos = dot(comps.eyev, comps.normalv)
+
+    if comps.n1 > comps.n2:
+        n = comps.n1 / comps.n2
+        sin2_t = n ** 2 * (1-cos ** 2)
+        if sin2_t > 1.0:
+            return 1.0
+        cos_t = math.sqrt(1 - sin2_t)
+        cos = cos_t
+
+    r0 = ((comps.n1 - comps.n2)/(comps.n1 + comps.n2)) ** 2
+    return r0 + (1-r0) * (1-cos) ** 5
+
 
 # Copyright 2020 Bloomberg Finance L.P.
 #
